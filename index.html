@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimeTable</title>
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath d='M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z'/%3E%3C/svg%3E">
+
     <style>
         :root {
             --bg-color: #090b11;
@@ -13,7 +15,6 @@
             --card-pink: #d02b9e;
             --card-green: #00bfa5;
             --card-orange: #f57c00;
-            /* Expanded Color Accent Palette */
             --card-purple: #8a2be2;
             --card-teal: #00afcb;
             --card-crimson: #e0115f;
@@ -21,6 +22,15 @@
             --card-lavender: #b19ffb;
             --text-main: #ffffff;
             --text-muted: #62697e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
@@ -34,9 +44,13 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            overflow-x: hidden;
         }
 
-        /* Header Area styling */
+        /* =========================
+           HEADER
+           ========================= */
+
         .header-container {
             width: 100%;
             max-width: 1300px;
@@ -50,6 +64,7 @@
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
         .logo span {
@@ -73,6 +88,7 @@
             font-weight: 500;
             font-size: 0.85rem;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .view-toggle-btn.active {
@@ -94,6 +110,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .io-btn:hover {
@@ -112,6 +129,7 @@
             align-items: center;
             gap: 8px;
             border: 1px solid rgba(0, 191, 165, 0.2);
+            white-space: nowrap;
         }
 
         .badge::before {
@@ -119,7 +137,10 @@
             font-size: 0.7rem;
         }
 
-        /* Container View Switching */
+        /* =========================
+           MAIN VIEW
+           ========================= */
+
         .view-section {
             width: 100%;
             max-width: 1300px;
@@ -129,7 +150,7 @@
             display: none;
         }
 
-        /* Corrected Grid View Layout */
+        /* Desktop layout stays as you had it */
         .timetable-grid {
             display: grid;
             grid-template-columns: 100px repeat(5, minmax(160px, 1fr));
@@ -144,6 +165,7 @@
             font-weight: 500;
             text-align: center;
             padding-bottom: 5px;
+            white-space: nowrap;
         }
 
         .day-header {
@@ -156,7 +178,10 @@
             height: 120px;
         }
 
-        /* Grid Cards matching the picture exactly */
+        /* =========================
+           TIMETABLE CARDS
+           ========================= */
+
         .slot-card {
             background-color: var(--card-empty);
             height: 120px;
@@ -172,6 +197,8 @@
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
             user-select: none;
             position: relative;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .slot-card:hover {
@@ -200,15 +227,22 @@
             font-size: 1.05rem;
             margin-bottom: 5px;
             letter-spacing: -0.2px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .slot-card .meta {
             font-size: 0.8rem;
             opacity: 0.8;
             margin-top: 2px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        /* Action hint overlay button for links */
         .slot-card .link-hint {
             position: absolute;
             bottom: 6px;
@@ -222,18 +256,57 @@
             transform: scale(1.1);
         }
 
-        /* Card color states */
-        .slot-card.blue { background-color: var(--card-blue); color: white; }
-        .slot-card.pink { background-color: var(--card-pink); color: white; }
-        .slot-card.green { background-color: var(--card-green); color: white; }
-        .slot-card.orange { background-color: var(--card-orange); color: white; }
-        .slot-card.purple { background-color: var(--card-purple); color: white; }
-        .slot-card.teal { background-color: var(--card-teal); color: white; }
-        .slot-card.crimson { background-color: var(--card-crimson); color: white; }
-        .slot-card.gold { background-color: var(--card-gold); color: #090b11; }
-        .slot-card.lavender { background-color: var(--card-lavender); color: #090b11; }
+        /* Card colors */
 
-        /* Advanced Entry View Layout */
+        .slot-card.blue {
+            background-color: var(--card-blue);
+            color: white;
+        }
+
+        .slot-card.pink {
+            background-color: var(--card-pink);
+            color: white;
+        }
+
+        .slot-card.green {
+            background-color: var(--card-green);
+            color: white;
+        }
+
+        .slot-card.orange {
+            background-color: var(--card-orange);
+            color: white;
+        }
+
+        .slot-card.purple {
+            background-color: var(--card-purple);
+            color: white;
+        }
+
+        .slot-card.teal {
+            background-color: var(--card-teal);
+            color: white;
+        }
+
+        .slot-card.crimson {
+            background-color: var(--card-crimson);
+            color: white;
+        }
+
+        .slot-card.gold {
+            background-color: var(--card-gold);
+            color: #090b11;
+        }
+
+        .slot-card.lavender {
+            background-color: var(--card-lavender);
+            color: #090b11;
+        }
+
+        /* =========================
+           ENTRY VIEW
+           ========================= */
+
         .entry-container {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -263,7 +336,8 @@
             letter-spacing: 0.5px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px;
             background-color: var(--bg-color);
@@ -274,7 +348,8 @@
             font-size: 0.95rem;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--card-blue);
         }
@@ -295,9 +370,21 @@
             transition: opacity 0.2s;
         }
 
-        .btn-primary { background-color: var(--card-blue); color: white; width: 100%; }
-        .btn-secondary { background-color: #232838; color: white; }
-        .btn-danger { background-color: #d32f2f; color: white; }
+        .btn-primary {
+            background-color: var(--card-blue);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background-color: #232838;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #d32f2f;
+            color: white;
+        }
 
         .entry-list-view {
             border-left: 1px solid #232838;
@@ -316,14 +403,38 @@
             align-items: center;
             border-left: 4px solid var(--card-blue);
         }
-        .list-item-row.pink { border-left-color: var(--card-pink); }
-        .list-item-row.green { border-left-color: var(--card-green); }
-        .list-item-row.orange { border-left-color: var(--card-orange); }
-        .list-item-row.purple { border-left-color: var(--card-purple); }
-        .list-item-row.teal { border-left-color: var(--card-teal); }
-        .list-item-row.crimson { border-left-color: var(--card-crimson); }
-        .list-item-row.gold { border-left-color: var(--card-gold); }
-        .list-item-row.lavender { border-left-color: var(--card-lavender); }
+
+        .list-item-row.pink {
+            border-left-color: var(--card-pink);
+        }
+
+        .list-item-row.green {
+            border-left-color: var(--card-green);
+        }
+
+        .list-item-row.orange {
+            border-left-color: var(--card-orange);
+        }
+
+        .list-item-row.purple {
+            border-left-color: var(--card-purple);
+        }
+
+        .list-item-row.teal {
+            border-left-color: var(--card-teal);
+        }
+
+        .list-item-row.crimson {
+            border-left-color: var(--card-crimson);
+        }
+
+        .list-item-row.gold {
+            border-left-color: var(--card-gold);
+        }
+
+        .list-item-row.lavender {
+            border-left-color: var(--card-lavender);
+        }
 
         .list-item-info span {
             color: var(--text-muted);
@@ -331,16 +442,23 @@
             margin-right: 10px;
         }
 
-        /* Modal Popup System */
+        /* =========================
+           MODAL
+           ========================= */
+
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 100;
+            padding: 20px;
         }
 
         .modal-content {
@@ -348,41 +466,433 @@
             padding: 30px;
             border-radius: 16px;
             width: 340px;
+            max-width: 100%;
             border: 1px solid #232838;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
+
+
+        /* =====================================================
+           TABLET LANDSCAPE / LARGE TABLET
+           851px - 1100px
+           ===================================================== */
+
+        @media (min-width: 851px) and (max-width: 1100px) {
+
+            body {
+                padding: 16px 24px;
+            }
+
+            .header-container {
+                max-width: 100%;
+                margin-bottom: 16px;
+            }
+
+            .header-right {
+                gap: 7px;
+            }
+
+            .io-btn,
+            .view-toggle-btn {
+                padding: 7px 10px;
+                font-size: 0.75rem;
+            }
+
+            .badge {
+                padding: 7px 12px;
+                font-size: 0.75rem;
+            }
+
+            /*
+             * Important:
+             * minmax(0, 1fr) allows all 5 days
+             * to fit inside the tablet width.
+             */
+            .timetable-grid {
+                grid-template-columns: 55px repeat(5, minmax(0, 1fr));
+                column-gap: 9px;
+                row-gap: 9px;
+            }
+
+            .time-header {
+                font-size: 0.72rem;
+                padding-bottom: 0;
+            }
+
+            .day-header {
+                height: 100px;
+                font-size: 0.88rem;
+            }
+
+            .slot-card {
+                height: 100px;
+                padding: 8px;
+                border-radius: 10px;
+            }
+
+            .slot-card .subject {
+                font-size: 0.86rem;
+            }
+
+            .slot-card .meta {
+                font-size: 0.68rem;
+            }
+
+            .slot-card .dash {
+                font-size: 1.1rem;
+            }
+
+            .entry-container {
+                gap: 25px;
+                padding: 25px;
+            }
+
+            .entry-list-view {
+                padding-left: 25px;
+            }
+        }
+
+
+        /* =====================================================
+           TABLET PORTRAIT / SMALL TABLET
+           600px - 850px
+           ===================================================== */
+
+        @media (min-width: 600px) and (max-width: 850px) {
+
+            body {
+                padding: 12px 12px;
+            }
+
+            .header-container {
+                width: 100%;
+                margin-bottom: 14px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .io-btn,
+            .view-toggle-btn {
+                padding: 7px 9px;
+                font-size: 0.72rem;
+            }
+
+            /*
+             * This is the key tablet fix.
+             *
+             * The 5 day columns are now allowed to
+             * shrink equally instead of requiring 160px.
+             */
+            .timetable-grid {
+                grid-template-columns: 48px repeat(5, minmax(0, 1fr));
+                column-gap: 6px;
+                row-gap: 8px;
+                width: 100%;
+            }
+
+            .time-header {
+                font-size: 0.62rem;
+                padding-bottom: 0;
+                letter-spacing: -0.2px;
+            }
+
+            .day-header {
+                height: 90px;
+                font-size: 0.78rem;
+            }
+
+            .slot-card {
+                height: 90px;
+                padding: 6px;
+                border-radius: 9px;
+            }
+
+            .slot-card .subject {
+                font-size: 0.76rem;
+                margin-bottom: 3px;
+            }
+
+            .slot-card .meta {
+                font-size: 0.62rem;
+                margin-top: 1px;
+            }
+
+            .slot-card .dash {
+                font-size: 1rem;
+            }
+
+            .slot-card .link-hint {
+                bottom: 4px;
+                right: 5px;
+                font-size: 0.6rem;
+            }
+
+            .badge {
+                display: none;
+            }
+
+            /* Entry view */
+            .entry-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                padding: 22px;
+            }
+
+            .entry-list-view {
+                border-left: none;
+                border-top: 1px solid #232838;
+                padding-left: 0;
+                padding-top: 25px;
+                max-height: none;
+            }
+        }
+
+
+        /* =====================================================
+           VERY SMALL TABLETS
+           ===================================================== */
+
+        @media (min-width: 600px) and (max-width: 700px) {
+
+            .logo {
+                font-size: 1.35rem;
+            }
+
+            .header-right {
+                justify-content: flex-start;
+            }
+
+            .timetable-grid {
+                grid-template-columns: 42px repeat(5, minmax(0, 1fr));
+                column-gap: 5px;
+                row-gap: 7px;
+            }
+
+            .time-header {
+                font-size: 0.55rem;
+            }
+
+            .day-header {
+                height: 82px;
+                font-size: 0.72rem;
+            }
+
+            .slot-card {
+                height: 82px;
+                padding: 4px;
+                border-radius: 8px;
+            }
+
+            .slot-card .subject {
+                font-size: 0.68rem;
+            }
+
+            .slot-card .meta {
+                font-size: 0.56rem;
+            }
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 599px) {
+
+            body {
+                padding: 12px 8px;
+            }
+
+            .header-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .logo {
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+            .header-right {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .io-btn,
+            .view-toggle-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 8px 5px;
+                font-size: 0.7rem;
+            }
+
+            .badge {
+                display: none;
+            }
+
+            /*
+             * On phones the timetable stays compact.
+             */
+            .timetable-grid {
+                grid-template-columns: 36px repeat(5, minmax(0, 1fr));
+                column-gap: 4px;
+                row-gap: 6px;
+            }
+
+            .time-header {
+                font-size: 0.46rem;
+                padding-bottom: 0;
+                white-space: normal;
+                line-height: 1.1;
+            }
+
+            .day-header {
+                height: 72px;
+                font-size: 0.65rem;
+            }
+
+            .slot-card {
+                height: 72px;
+                padding: 3px;
+                border-radius: 7px;
+            }
+
+            .slot-card .subject {
+                font-size: 0.58rem;
+                margin-bottom: 2px;
+            }
+
+            .slot-card .meta {
+                font-size: 0.48rem;
+            }
+
+            .slot-card .dash {
+                font-size: 0.85rem;
+            }
+
+            .slot-card .link-hint {
+                display: none;
+            }
+
+            /* Entry view */
+            .entry-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 16px;
+            }
+
+            .entry-list-view {
+                border-left: none;
+                border-top: 1px solid #232838;
+                padding-left: 0;
+                padding-top: 20px;
+                max-height: none;
+            }
+
+            .form-actions {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 10px 16px;
+            }
+
+            .modal-content {
+                padding: 22px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="header-container">
-        <div class="logo">Time<span>Table</span></div>
+
+        <div class="logo">
+            Time<span>Table</span>
+        </div>
+
         <div class="header-right">
-            <button class="io-btn" onclick="exportData()">📥 Export</button>
-            <button class="io-btn" onclick="document.getElementById('importFile').click()">📤 Import</button>
-            <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
-            
-            <button id="toggleGridBtn" class="view-toggle-btn active" onclick="switchView('grid')">Grid View</button>
-            <button id="toggleEntryBtn" class="view-toggle-btn" onclick="switchView('entry')">Form Entry View</button>
-            <div class="badge">Interactive Mode</div>
+
+            <button class="io-btn" onclick="exportData()">
+                📥 Export
+            </button>
+
+            <button class="io-btn" onclick="document.getElementById('importFile').click()">
+                📤 Import
+            </button>
+
+            <input
+                type="file"
+                id="importFile"
+                style="display: none;"
+                accept=".json"
+                onchange="importData(event)"
+            >
+
+            <button
+                id="toggleGridBtn"
+                class="view-toggle-btn active"
+                onclick="switchView('grid')"
+            >
+                Grid View
+            </button>
+
+            <button
+                id="toggleEntryBtn"
+                class="view-toggle-btn"
+                onclick="switchView('entry')"
+            >
+                Form Entry View
+            </button>
+
+            <div class="badge">
+                Interactive Mode
+            </div>
+
         </div>
     </div>
+
 
     <!-- MAIN GRID VIEW -->
+
     <div id="gridView" class="view-section">
+
         <div class="timetable-grid" id="mainTimetableGrid">
-            <!-- Grid structure rendered dynamically here as direct children -->
+            <!-- Grid structure rendered dynamically -->
         </div>
+
     </div>
 
+
     <!-- FORM ENTRY VIEW -->
+
     <div id="entryView" class="view-section">
+
         <div class="entry-container">
+
             <div class="entry-form">
+
                 <h3>Add / Manage Entry</h3>
-                
+
                 <div class="form-group">
                     <label for="formDay">Day</label>
+
                     <select id="formDay">
                         <option value="Sun">Sunday</option>
                         <option value="Mon">Monday</option>
@@ -394,6 +904,7 @@
 
                 <div class="form-group">
                     <label for="formTime">Time Slot</label>
+
                     <select id="formTime">
                         <option value="0">10:00 - 12:00</option>
                         <option value="1">12:00 - 14:00</option>
@@ -405,26 +916,47 @@
 
                 <div class="form-group">
                     <label for="formSubject">Subject Name</label>
-                    <input type="text" id="formSubject" placeholder="e.g., Computer Science">
+
+                    <input
+                        type="text"
+                        id="formSubject"
+                        placeholder="e.g., Computer Science"
+                    >
                 </div>
 
                 <div class="form-group">
                     <label for="formRoom">Room / Modality</label>
-                    <input type="text" id="formRoom" placeholder="e.g., online, Room 153">
+
+                    <input
+                        type="text"
+                        id="formRoom"
+                        placeholder="e.g., online, Room 153"
+                    >
                 </div>
 
                 <div class="form-group">
                     <label for="formInstructor">Instructor / Extra</label>
-                    <input type="text" id="formInstructor" placeholder="e.g., Dr. Smith">
+
+                    <input
+                        type="text"
+                        id="formInstructor"
+                        placeholder="e.g., Dr. Smith"
+                    >
                 </div>
 
                 <div class="form-group">
                     <label for="formLink">Class Join Link (URL)</label>
-                    <input type="url" id="formLink" placeholder="https://zoom.us/j/... or Blackboard URL">
+
+                    <input
+                        type="url"
+                        id="formLink"
+                        placeholder="https://zoom.us/j/... or Blackboard URL"
+                    >
                 </div>
 
                 <div class="form-group">
                     <label for="formColor">Color Accent</label>
+
                     <select id="formColor">
                         <option value="blue">Blue</option>
                         <option value="pink">Pink</option>
@@ -438,337 +970,932 @@
                     </select>
                 </div>
 
-                <button class="btn btn-primary" onclick="handleFormSubmit()">Save to Timetable</button>
+                <button
+                    class="btn btn-primary"
+                    onclick="handleFormSubmit()"
+                >
+                    Save to Timetable
+                </button>
+
             </div>
+
 
             <div class="entry-list-view">
-                <h3 style="margin-top:0; color: var(--text-muted); font-size: 1.1rem;">Current Active Classes</h3>
+
+                <h3 style="margin-top:0; color:var(--text-muted); font-size:1.1rem;">
+                    Current Active Classes
+                </h3>
+
                 <div id="liveStatusList"></div>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- Quick Edit / Action Modal -->
+
+    <!-- QUICK EDIT MODAL -->
+
     <div id="quickModal" class="modal">
+
         <div class="modal-content">
-            <h3 style="margin-top:0; margin-bottom:20px;">Modify Class Block</h3>
-            <div class="form-group"><label>Subject</label><input type="text" id="modalSubject"></div>
-            <div class="form-group"><label>Room</label><input type="text" id="modalRoom"></div>
-            <div class="form-group"><label>Instructor</label><input type="text" id="modalInstructor"></div>
-            <div class="form-group"><label>Class Join Link (URL)</label><input type="url" id="modalLink"></div>
+
+            <h3 style="margin-top:0; margin-bottom:20px;">
+                Modify Class Block
+            </h3>
+
             <div class="form-group">
+                <label>Subject</label>
+                <input type="text" id="modalSubject">
+            </div>
+
+            <div class="form-group">
+                <label>Room</label>
+                <input type="text" id="modalRoom">
+            </div>
+
+            <div class="form-group">
+                <label>Instructor</label>
+                <input type="text" id="modalInstructor">
+            </div>
+
+            <div class="form-group">
+                <label>Class Join Link (URL)</label>
+                <input type="url" id="modalLink">
+            </div>
+
+            <div class="form-group">
+
                 <label>Color</label>
+
                 <select id="modalColor">
-                    <option value="blue">Blue</option><option value="pink">Pink</option>
-                    <option value="green">Green</option><option value="orange">Orange</option>
-                    <option value="purple">Purple</option><option value="teal">Teal</option>
-                    <option value="crimson">Crimson</option><option value="gold">Gold</option>
+                    <option value="blue">Blue</option>
+                    <option value="pink">Pink</option>
+                    <option value="green">Green</option>
+                    <option value="orange">Orange</option>
+                    <option value="purple">Purple</option>
+                    <option value="teal">Teal</option>
+                    <option value="crimson">Crimson</option>
+                    <option value="gold">Gold</option>
                     <option value="lavender">Lavender</option>
                 </select>
+
             </div>
+
             <div class="form-actions">
-                <button class="btn btn-danger" onclick="deleteModalData()" style="margin-right:auto;">Clear</button>
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveModalData()" style="width:auto;">Save</button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteModalData()"
+                    style="margin-right:auto;"
+                >
+                    Clear
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveModalData()"
+                    style="width:auto;"
+                >
+                    Save
+                </button>
+
             </div>
+
         </div>
+
     </div>
 
+
     <script>
+
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
-        const times = ['10:00 - 12:00', '12:00 - 14:00', '14:00 - 16:00', '16:00 - 18:00', '18:00 - 20:00'];
-        
-        let timetableData = JSON.parse(localStorage.getItem('perfect_timetable_db')) || {};
+
+        const times = [
+            '10:00 - 12:00',
+            '12:00 - 14:00',
+            '14:00 - 16:00',
+            '16:00 - 18:00',
+            '18:00 - 20:00'
+        ];
+
+        let timetableData =
+            JSON.parse(localStorage.getItem('perfect_timetable_db')) || {};
+
         let activeEditKey = null;
         let activeDraggedKey = null;
+
 
         function init() {
             renderGridStructure();
             renderFormLists();
         }
 
+
         function persist() {
-            localStorage.setItem('perfect_timetable_db', JSON.stringify(timetableData));
+            localStorage.setItem(
+                'perfect_timetable_db',
+                JSON.stringify(timetableData)
+            );
         }
 
-        /* --- Export & Import Capabilities --- */
+
+        /* =========================
+           EXPORT
+           ========================= */
+
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(timetableData, null, 2));
-            const downloadAnchor = document.createElement('a');
+
+            const dataStr =
+                "data:text/json;charset=utf-8," +
+                encodeURIComponent(
+                    JSON.stringify(timetableData, null, 2)
+                );
+
+            const downloadAnchor =
+                document.createElement('a');
+
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "timetable_backup.json");
+
+            downloadAnchor.setAttribute(
+                "download",
+                "timetable_backup.json"
+            );
+
             document.body.appendChild(downloadAnchor);
+
             downloadAnchor.click();
+
             downloadAnchor.remove();
         }
 
+
+        /* =========================
+           IMPORT
+           ========================= */
+
         function importData(event) {
+
             const fileReader = new FileReader();
+
             fileReader.onload = function(e) {
+
                 try {
-                    const parsedData = JSON.parse(e.target.result);
-                    if (parsedData && typeof parsedData === 'object') {
+
+                    const parsedData =
+                        JSON.parse(e.target.result);
+
+                    if (
+                        parsedData &&
+                        typeof parsedData === 'object'
+                    ) {
+
                         timetableData = parsedData;
+
                         persist();
+
                         renderGridStructure();
                         renderFormLists();
-                        alert('Timetable successfully imported!');
+
+                        alert(
+                            'Timetable successfully imported!'
+                        );
+
                     } else {
-                        alert('Invalid timetable file structure.');
+
+                        alert(
+                            'Invalid timetable file structure.'
+                        );
                     }
+
                 } catch (err) {
-                    alert('Error loading file. Please upload a valid JSON file.');
+
+                    alert(
+                        'Error loading file. Please upload a valid JSON file.'
+                    );
                 }
             };
+
             if (event.target.files[0]) {
-                fileReader.readAsText(event.target.files[0]);
+                fileReader.readAsText(
+                    event.target.files[0]
+                );
             }
-            // Reset input so importing the same file again triggers onchange
+
             event.target.value = '';
         }
 
+
+        /* =========================
+           VIEW SWITCH
+           ========================= */
+
         function switchView(viewName) {
+
             if (viewName === 'grid') {
-                document.getElementById('gridView').style.display = 'block';
-                document.getElementById('entryView').style.display = 'none';
-                document.getElementById('toggleGridBtn').classList.add('active');
-                document.getElementById('toggleEntryBtn').classList.remove('active');
+
+                document.getElementById(
+                    'gridView'
+                ).style.display = 'block';
+
+                document.getElementById(
+                    'entryView'
+                ).style.display = 'none';
+
+                document.getElementById(
+                    'toggleGridBtn'
+                ).classList.add('active');
+
+                document.getElementById(
+                    'toggleEntryBtn'
+                ).classList.remove('active');
+
                 renderGridStructure();
+
             } else {
-                document.getElementById('gridView').style.display = 'none';
-                document.getElementById('entryView').style.display = 'block';
-                document.getElementById('toggleGridBtn').classList.remove('active');
-                document.getElementById('toggleEntryBtn').classList.add('active');
+
+                document.getElementById(
+                    'gridView'
+                ).style.display = 'none';
+
+                document.getElementById(
+                    'entryView'
+                ).style.display = 'block';
+
+                document.getElementById(
+                    'toggleGridBtn'
+                ).classList.remove('active');
+
+                document.getElementById(
+                    'toggleEntryBtn'
+                ).classList.add('active');
+
                 renderFormLists();
             }
         }
 
+
+        /* =========================
+           GRID RENDER
+           ========================= */
+
         function renderGridStructure() {
-            const grid = document.getElementById('mainTimetableGrid');
+
+            const grid =
+                document.getElementById(
+                    'mainTimetableGrid'
+                );
+
             grid.innerHTML = '';
 
-            // 1. Append Top Row Headers
-            const spacer = document.createElement('div');
-            spacer.className = 'time-header-spacer';
+
+            /* Header spacer */
+
+            const spacer =
+                document.createElement('div');
+
+            spacer.className =
+                'time-header-spacer';
+
             grid.appendChild(spacer);
 
+
+            /* Time headers */
+
             times.forEach(time => {
-                const header = document.createElement('div');
-                header.className = 'time-header';
+
+                const header =
+                    document.createElement('div');
+
+                header.className =
+                    'time-header';
+
                 header.textContent = time;
+
                 grid.appendChild(header);
             });
 
-            // 2. Append Days and Cards sequentially directly inside the grid parent
+
+            /* Days */
+
             days.forEach(day => {
-                const dayLabel = document.createElement('div');
-                dayLabel.className = 'day-header';
+
+                const dayLabel =
+                    document.createElement('div');
+
+                dayLabel.className =
+                    'day-header';
+
                 dayLabel.textContent = day;
+
                 grid.appendChild(dayLabel);
 
+
+                /* Five time slots */
+
                 for (let i = 0; i < 5; i++) {
-                    const slotKey = `${day}-${i}`;
-                    const card = document.createElement('div');
-                    card.className = 'slot-card';
-                    card.setAttribute('data-key', slotKey);
+
+                    const slotKey =
+                        `${day}-${i}`;
+
+                    const card =
+                        document.createElement('div');
+
+                    card.className =
+                        'slot-card';
+
+                    card.setAttribute(
+                        'data-key',
+                        slotKey
+                    );
+
 
                     if (timetableData[slotKey]) {
-                        const data = timetableData[slotKey];
-                        card.classList.add(data.color || 'blue');
+
+                        const data =
+                            timetableData[slotKey];
+
+                        card.classList.add(
+                            data.color || 'blue'
+                        );
+
                         card.draggable = true;
-                        
-                        // Check if card contains a valid join link URL
-                        const hasLink = data.link && data.link.trim() !== "";
-                        const linkIcon = hasLink ? ' 🔗' : '';
+
+
+                        const hasLink =
+                            data.link &&
+                            data.link.trim() !== "";
+
+
+                        const linkIcon =
+                            hasLink ? ' 🔗' : '';
+
 
                         card.innerHTML = `
-                            <div class="subject">${data.subject}</div>
-                            <div class="meta">${data.room || ''}${linkIcon}</div>
-                            <div class="meta">${data.instructor || ''}</div>
+                            <div class="subject">
+                                ${data.subject}
+                            </div>
+
+                            <div class="meta">
+                                ${data.room || ''}${linkIcon}
+                            </div>
+
+                            <div class="meta">
+                                ${data.instructor || ''}
+                            </div>
                         `;
 
-                        // Handle item click action contextually
-                        card.addEventListener('click', (e) => {
-                            // If a valid link exists, navigate to it in a new tab immediately
-                            if (hasLink) {
-                                window.open(data.link.trim(), '_blank');
-                            } else {
-                                triggerQuickEdit(slotKey);
-                            }
-                        });
 
-                        // Right-click context handler allows quick modification if the card has an active target redirect link
-                        card.addEventListener('contextmenu', (e) => {
-                            e.preventDefault();
-                            triggerQuickEdit(slotKey);
-                        });
+                        card.addEventListener(
+                            'click',
+                            () => {
+
+                                if (hasLink) {
+
+                                    window.open(
+                                        data.link.trim(),
+                                        '_blank'
+                                    );
+
+                                } else {
+
+                                    triggerQuickEdit(
+                                        slotKey
+                                    );
+                                }
+                            }
+                        );
+
+
+                        card.addEventListener(
+                            'contextmenu',
+                            (e) => {
+
+                                e.preventDefault();
+
+                                triggerQuickEdit(
+                                    slotKey
+                                );
+                            }
+                        );
+
 
                     } else {
-                        card.innerHTML = '<div class="dash">-</div>';
-                        card.addEventListener('click', () => triggerQuickEdit(slotKey));
+
+                        card.innerHTML =
+                            '<div class="dash">-</div>';
+
+                        card.addEventListener(
+                            'click',
+                            () =>
+                                triggerQuickEdit(
+                                    slotKey
+                                )
+                        );
                     }
 
-                    // Drag and Drop Event Hooks
-                    card.addEventListener('dragstart', handleDragStart);
-                    card.addEventListener('dragover', handleDragOver);
-                    card.addEventListener('dragleave', handleDragLeave);
-                    card.addEventListener('drop', handleDrop);
-                    card.addEventListener('dragend', handleDragEnd);
+
+                    /* Drag and drop */
+
+                    card.addEventListener(
+                        'dragstart',
+                        handleDragStart
+                    );
+
+                    card.addEventListener(
+                        'dragover',
+                        handleDragOver
+                    );
+
+                    card.addEventListener(
+                        'dragleave',
+                        handleDragLeave
+                    );
+
+                    card.addEventListener(
+                        'drop',
+                        handleDrop
+                    );
+
+                    card.addEventListener(
+                        'dragend',
+                        handleDragEnd
+                    );
+
 
                     grid.appendChild(card);
                 }
             });
         }
 
+
+        /* =========================
+           FORM LIST
+           ========================= */
+
         function renderFormLists() {
-            const listContainer = document.getElementById('liveStatusList');
+
+            const listContainer =
+                document.getElementById(
+                    'liveStatusList'
+                );
+
             listContainer.innerHTML = '';
+
             let count = 0;
 
+
             days.forEach(day => {
+
                 for (let i = 0; i < 5; i++) {
-                    const key = `${day}-${i}`;
+
+                    const key =
+                        `${day}-${i}`;
+
+
                     if (timetableData[key]) {
+
                         count++;
-                        const data = timetableData[key];
-                        const item = document.createElement('div');
-                        item.className = `list-item-row ${data.color}`;
-                        
-                        const linkDisplay = data.link ? `<div style="font-size:0.75rem; color:#0091ff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:300px;">🔗 ${data.link}</div>` : '';
+
+                        const data =
+                            timetableData[key];
+
+
+                        const item =
+                            document.createElement(
+                                'div'
+                            );
+
+                        item.className =
+                            `list-item-row ${data.color}`;
+
+
+                        const linkDisplay =
+                            data.link
+                                ? `
+                                    <div style="
+                                        font-size:0.75rem;
+                                        color:#0091ff;
+                                        overflow:hidden;
+                                        text-overflow:ellipsis;
+                                        white-space:nowrap;
+                                        max-width:300px;
+                                    ">
+                                        🔗 ${data.link}
+                                    </div>
+                                `
+                                : '';
+
 
                         item.innerHTML = `
                             <div class="list-item-info">
-                                <span>[${day} ${times[i]}]</span><strong>${data.subject}</strong>
-                                <div style="font-size:0.8rem; opacity:0.7; margin-top:2px;">${data.room || ''} ${data.instructor ? '• ' + data.instructor : ''}</div>
+
+                                <span>
+                                    [${day} ${times[i]}]
+                                </span>
+
+                                <strong>
+                                    ${data.subject}
+                                </strong>
+
+                                <div style="
+                                    font-size:0.8rem;
+                                    opacity:0.7;
+                                    margin-top:2px;
+                                ">
+                                    ${data.room || ''}
+                                    ${data.instructor
+                                        ? '• ' + data.instructor
+                                        : ''}
+                                </div>
+
                                 ${linkDisplay}
+
                             </div>
-                            <button class="view-toggle-btn active" onclick="triggerQuickEdit('${key}')">Edit</button>
+
+                            <button
+                                class="view-toggle-btn active"
+                                onclick="triggerQuickEdit('${key}')"
+                            >
+                                Edit
+                            </button>
                         `;
+
+
                         listContainer.appendChild(item);
                     }
                 }
             });
 
+
             if (count === 0) {
-                listContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem;">No entries saved yet. Fill out the form fields on the left to add your items.</div>';
+
+                listContainer.innerHTML = `
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:0.9rem;
+                    ">
+                        No entries saved yet.
+                        Fill out the form fields on the left
+                        to add your items.
+                    </div>
+                `;
             }
         }
+
+
+        /* =========================
+           FORM SUBMIT
+           ========================= */
 
         function handleFormSubmit() {
-            const day = document.getElementById('formDay').value;
-            const timeIndex = document.getElementById('formTime').value;
-            const subject = document.getElementById('formSubject').value.trim();
-            const room = document.getElementById('formRoom').value.trim();
-            const instructor = document.getElementById('formInstructor').value.trim();
-            const link = document.getElementById('formLink').value.trim();
-            const color = document.getElementById('formColor').value;
+
+            const day =
+                document.getElementById(
+                    'formDay'
+                ).value;
+
+            const timeIndex =
+                document.getElementById(
+                    'formTime'
+                ).value;
+
+            const subject =
+                document.getElementById(
+                    'formSubject'
+                ).value.trim();
+
+            const room =
+                document.getElementById(
+                    'formRoom'
+                ).value.trim();
+
+            const instructor =
+                document.getElementById(
+                    'formInstructor'
+                ).value.trim();
+
+            const link =
+                document.getElementById(
+                    'formLink'
+                ).value.trim();
+
+            const color =
+                document.getElementById(
+                    'formColor'
+                ).value;
+
 
             if (!subject) {
-                alert('Please provide a subject name.');
+
+                alert(
+                    'Please provide a subject name.'
+                );
+
                 return;
             }
 
-            const targetKey = `${day}-${timeIndex}`;
-            timetableData[targetKey] = { subject, room, instructor, link, color };
-            
+
+            const targetKey =
+                `${day}-${timeIndex}`;
+
+
+            timetableData[targetKey] = {
+                subject,
+                room,
+                instructor,
+                link,
+                color
+            };
+
+
             persist();
+
+            renderGridStructure();
             renderFormLists();
 
-            document.getElementById('formSubject').value = '';
-            document.getElementById('formRoom').value = '';
-            document.getElementById('formInstructor').value = '';
-            document.getElementById('formLink').value = '';
+
+            document.getElementById(
+                'formSubject'
+            ).value = '';
+
+            document.getElementById(
+                'formRoom'
+            ).value = '';
+
+            document.getElementById(
+                'formInstructor'
+            ).value = '';
+
+            document.getElementById(
+                'formLink'
+            ).value = '';
         }
+
+
+        /* =========================
+           QUICK EDIT
+           ========================= */
 
         function triggerQuickEdit(key) {
+
             activeEditKey = key;
-            const data = timetableData[key] || {};
 
-            document.getElementById('modalSubject').value = data.subject || '';
-            document.getElementById('modalRoom').value = data.room || '';
-            document.getElementById('modalInstructor').value = data.instructor || '';
-            document.getElementById('modalLink').value = data.link || '';
-            document.getElementById('modalColor').value = data.color || 'blue';
+            const data =
+                timetableData[key] || {};
 
-            document.getElementById('quickModal').style.display = 'flex';
+
+            document.getElementById(
+                'modalSubject'
+            ).value =
+                data.subject || '';
+
+
+            document.getElementById(
+                'modalRoom'
+            ).value =
+                data.room || '';
+
+
+            document.getElementById(
+                'modalInstructor'
+            ).value =
+                data.instructor || '';
+
+
+            document.getElementById(
+                'modalLink'
+            ).value =
+                data.link || '';
+
+
+            document.getElementById(
+                'modalColor'
+            ).value =
+                data.color || 'blue';
+
+
+            document.getElementById(
+                'quickModal'
+            ).style.display = 'flex';
         }
+
 
         function closeModal() {
-            document.getElementById('quickModal').style.display = 'none';
+
+            document.getElementById(
+                'quickModal'
+            ).style.display = 'none';
         }
 
+
         function saveModalData() {
-            const subject = document.getElementById('modalSubject').value.trim();
-            const room = document.getElementById('modalRoom').value.trim();
-            const instructor = document.getElementById('modalInstructor').value.trim();
-            const link = document.getElementById('modalLink').value.trim();
-            const color = document.getElementById('modalColor').value;
+
+            const subject =
+                document.getElementById(
+                    'modalSubject'
+                ).value.trim();
+
+            const room =
+                document.getElementById(
+                    'modalRoom'
+                ).value.trim();
+
+            const instructor =
+                document.getElementById(
+                    'modalInstructor'
+                ).value.trim();
+
+            const link =
+                document.getElementById(
+                    'modalLink'
+                ).value.trim();
+
+            const color =
+                document.getElementById(
+                    'modalColor'
+                ).value;
+
 
             if (!subject) {
+
                 deleteModalData();
+
                 return;
             }
 
-            timetableData[activeEditKey] = { subject, room, instructor, link, color };
+
+            timetableData[activeEditKey] = {
+                subject,
+                room,
+                instructor,
+                link,
+                color
+            };
+
+
             persist();
+
             closeModal();
+
             renderGridStructure();
             renderFormLists();
         }
+
 
         function deleteModalData() {
+
             delete timetableData[activeEditKey];
+
             persist();
+
             closeModal();
+
             renderGridStructure();
             renderFormLists();
         }
 
-        // Drag and Drop Controls
-        function handleDragStart(e) {
-            activeDraggedKey = this.getAttribute('data-key');
-            this.classList.add('dragging');
-        }
-        function handleDragOver(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
-        }
-        function handleDragLeave() {
-            this.classList.remove('drag-over');
-        }
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            const targetKey = this.getAttribute('data-key');
 
-            if (activeDraggedKey && activeDraggedKey !== targetKey) {
-                const tempStorage = timetableData[targetKey];
-                if (timetableData[activeDraggedKey]) {
-                    timetableData[targetKey] = timetableData[activeDraggedKey];
+        /* =========================
+           DRAG & DROP
+           ========================= */
+
+        function handleDragStart(e) {
+
+            activeDraggedKey =
+                this.getAttribute(
+                    'data-key'
+                );
+
+            this.classList.add(
+                'dragging'
+            );
+        }
+
+
+        function handleDragOver(e) {
+
+            e.preventDefault();
+
+            this.classList.add(
+                'drag-over'
+            );
+        }
+
+
+        function handleDragLeave() {
+
+            this.classList.remove(
+                'drag-over'
+            );
+        }
+
+
+        function handleDrop(e) {
+
+            e.preventDefault();
+
+            this.classList.remove(
+                'drag-over'
+            );
+
+
+            const targetKey =
+                this.getAttribute(
+                    'data-key'
+                );
+
+
+            if (
+                activeDraggedKey &&
+                activeDraggedKey !== targetKey
+            ) {
+
+                const tempStorage =
+                    timetableData[targetKey];
+
+
+                if (
+                    timetableData[
+                        activeDraggedKey
+                    ]
+                ) {
+
+                    timetableData[targetKey] =
+                        timetableData[
+                            activeDraggedKey
+                        ];
+
                 } else {
-                    delete timetableData[targetKey];
+
+                    delete timetableData[
+                        targetKey
+                    ];
                 }
+
 
                 if (tempStorage) {
-                    timetableData[activeDraggedKey] = tempStorage;
+
+                    timetableData[
+                        activeDraggedKey
+                    ] = tempStorage;
+
                 } else {
-                    delete timetableData[activeDraggedKey];
+
+                    delete timetableData[
+                        activeDraggedKey
+                    ];
                 }
 
+
                 persist();
+
                 renderGridStructure();
                 renderFormLists();
             }
         }
+
+
         function handleDragEnd() {
-            this.classList.remove('dragging');
+
+            this.classList.remove(
+                'dragging'
+            );
         }
+
+
+        /* =========================
+           CLOSE MODAL
+           ========================= */
 
         window.onclick = function(e) {
-            if (e.target === document.getElementById('quickModal')) closeModal();
-        }
+
+            if (
+                e.target ===
+                document.getElementById(
+                    'quickModal'
+                )
+            ) {
+                closeModal();
+            }
+        };
+
+
+        /* =========================
+           START
+           ========================= */
 
         init();
+
     </script>
+
 </body>
 </html>
