@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTable</title>
+    <style>
+        :root {
+            --bg-color: #090b11;
+            --card-empty: #161923;
+            --card-blue: #0091ff;
+            --card-pink: #d02b9e;
+            --card-green: #00bfa5;
+            --card-orange: #f57c00;
+            /* Expanded Color Accent Palette */
+            --card-purple: #8a2be2;
+            --card-teal: #00afcb;
+            --card-crimson: #e0115f;
+            --card-gold: #d4af37;
+            --card-lavender: #b19ffb;
+            --text-main: #ffffff;
+            --text-muted: #62697e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Header Area styling */
+        .header-container {
+            width: 100%;
+            max-width: 1300px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            font-weight: 300;
+            color: #a0a5b5;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .view-toggle-btn {
+            background: none;
+            border: 1px solid #232838;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .view-toggle-btn.active {
+            background-color: #161923;
+            color: var(--text-main);
+            border-color: #3b4257;
+        }
+
+        .io-btn {
+            background-color: #161923;
+            border: 1px solid #3b4257;
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .io-btn:hover {
+            background-color: #232838;
+            border-color: var(--card-blue);
+        }
+
+        .badge {
+            background-color: rgba(0, 191, 165, 0.1);
+            color: #00bfa5;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0, 191, 165, 0.2);
+        }
+
+        .badge::before {
+            content: "●";
+            font-size: 0.7rem;
+        }
+
+        /* Container View Switching */
+        .view-section {
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        #entryView {
+            display: none;
+        }
+
+        /* Corrected Grid View Layout */
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(5, minmax(160px, 1fr));
+            row-gap: 12px;
+            column-gap: 24px;
+            width: 100%;
+        }
+
+        .time-header {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            padding-bottom: 25px;
+        }
+
+        .day-header {
+            color: #a0a5b5;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 120px;
+        }
+
+        /* Grid Cards matching the picture exactly */
+        .slot-card {
+            background-color: var(--card-empty);
+            height: 120px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            user-select: none;
+            position: relative;
+        }
+
+        .slot-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .slot-card.dragging {
+            opacity: 0.3;
+            border: 2px dashed #ffffff;
+        }
+
+        .slot-card.drag-over {
+            background-color: #202536;
+            box-shadow: 0 0 15px rgba(0, 145, 255, 0.2);
+        }
+
+        .slot-card .dash {
+            color: #383f52;
+            font-size: 1.4rem;
+            font-weight: 400;
+        }
+
+        .slot-card .subject {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+            letter-spacing: -0.2px;
+        }
+
+        .slot-card .meta {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* Action hint overlay button for links */
+        .slot-card .link-hint {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .slot-card:hover .link-hint {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Card color states */
+        .slot-card.blue { background-color: var(--card-blue); color: white; }
+        .slot-card.pink { background-color: var(--card-pink); color: white; }
+        .slot-card.green { background-color: var(--card-green); color: white; }
+        .slot-card.orange { background-color: var(--card-orange); color: white; }
+        .slot-card.purple { background-color: var(--card-purple); color: white; }
+        .slot-card.teal { background-color: var(--card-teal); color: white; }
+        .slot-card.crimson { background-color: var(--card-crimson); color: white; }
+        .slot-card.gold { background-color: var(--card-gold); color: #090b11; }
+        .slot-card.lavender { background-color: var(--card-lavender); color: #090b11; }
+
+        /* Advanced Entry View Layout */
+        .entry-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            background-color: #11141d;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid #1f2433;
+        }
+
+        .entry-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid #232838;
+            border-radius: 8px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--card-blue);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary { background-color: var(--card-blue); color: white; width: 100%; }
+        .btn-secondary { background-color: #232838; color: white; }
+        .btn-danger { background-color: #d32f2f; color: white; }
+
+        .entry-list-view {
+            border-left: 1px solid #232838;
+            padding-left: 40px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .list-item-row {
+            background-color: var(--bg-color);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--card-blue);
+        }
+        .list-item-row.pink { border-left-color: var(--card-pink); }
+        .list-item-row.green { border-left-color: var(--card-green); }
+        .list-item-row.orange { border-left-color: var(--card-orange); }
+        .list-item-row.purple { border-left-color: var(--card-purple); }
+        .list-item-row.teal { border-left-color: var(--card-teal); }
+        .list-item-row.crimson { border-left-color: var(--card-crimson); }
+        .list-item-row.gold { border-left-color: var(--card-gold); }
+        .list-item-row.lavender { border-left-color: var(--card-lavender); }
+
+        .list-item-info span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-right: 10px;
+        }
+
+        /* Modal Popup System */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: #11141d;
+            padding: 30px;
+            border-radius: 16px;
+            width: 340px;
+            border: 1px solid #232838;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="logo">Time<span>Table</span></div>
+        <div class="header-right">
+            <button class="io-btn" onclick="exportData()">📥 Export</button>
+            <button class="io-btn" onclick="document.getElementById('importFile').click()">📤 Import</button>
+            <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
+            
+            <button id="toggleGridBtn" class="view-toggle-btn active" onclick="switchView('grid')">Grid View</button>
+            <button id="toggleEntryBtn" class="view-toggle-btn" onclick="switchView('entry')">Form Entry View</button>
+            <div class="badge">Interactive Mode</div>
+        </div>
+    </div>
+
+    <!-- MAIN GRID VIEW -->
+    <div id="gridView" class="view-section">
+        <div class="timetable-grid" id="mainTimetableGrid">
+            <!-- Grid structure rendered dynamically here as direct children -->
+        </div>
+    </div>
+
+    <!-- FORM ENTRY VIEW -->
+    <div id="entryView" class="view-section">
+        <div class="entry-container">
+            <div class="entry-form">
+                <h3>Add / Manage Entry</h3>
+                
+                <div class="form-group">
+                    <label for="formDay">Day</label>
+                    <select id="formDay">
+                        <option value="Sun">Sunday</option>
+                        <option value="Mon">Monday</option>
+                        <option value="Tue">Tuesday</option>
+                        <option value="Wed">Wednesday</option>
+                        <option value="Thu">Thursday</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="formTime">Time Slot</label>
+                    <select id="formTime">
+                        <option value="0">10:00 - 12:00</option>
+                        <option value="1">12:00 - 14:00</option>
+                        <option value="2">14:00 - 16:00</option>
+                        <option value="3">16:00 - 18:00</option>
+                        <option value="4">18:00 - 20:00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="formSubject">Subject Name</label>
+                    <input type="text" id="formSubject" placeholder="e.g., Computer Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="formRoom">Room / Modality</label>
+                    <input type="text" id="formRoom" placeholder="e.g., online, Room 153">
+                </div>
+
+                <div class="form-group">
+                    <label for="formInstructor">Instructor / Extra</label>
+                    <input type="text" id="formInstructor" placeholder="e.g., Dr. Smith">
+                </div>
+
+                <div class="form-group">
+                    <label for="formLink">Class Join Link (URL)</label>
+                    <input type="url" id="formLink" placeholder="https://zoom.us/j/... or Blackboard URL">
+                </div>
+
+                <div class="form-group">
+                    <label for="formColor">Color Accent</label>
+                    <select id="formColor">
+                        <option value="blue">Blue</option>
+                        <option value="pink">Pink</option>
+                        <option value="green">Green</option>
+                        <option value="orange">Orange</option>
+                        <option value="purple">Purple</option>
+                        <option value="teal">Teal</option>
+                        <option value="crimson">Crimson</option>
+                        <option value="gold">Gold</option>
+                        <option value="lavender">Lavender</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="handleFormSubmit()">Save to Timetable</button>
+            </div>
+
+            <div class="entry-list-view">
+                <h3 style="margin-top:0; color: var(--text-muted); font-size: 1.1rem;">Current Active Classes</h3>
+                <div id="liveStatusList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Edit / Action Modal -->
+    <div id="quickModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; margin-bottom:20px;">Modify Class Block</h3>
+            <div class="form-group"><label>Subject</label><input type="text" id="modalSubject"></div>
+            <div class="form-group"><label>Room</label><input type="text" id="modalRoom"></div>
+            <div class="form-group"><label>Instructor</label><input type="text" id="modalInstructor"></div>
+            <div class="form-group"><label>Class Join Link (URL)</label><input type="url" id="modalLink"></div>
+            <div class="form-group">
+                <label>Color</label>
+                <select id="modalColor">
+                    <option value="blue">Blue</option><option value="pink">Pink</option>
+                    <option value="green">Green</option><option value="orange">Orange</option>
+                    <option value="purple">Purple</option><option value="teal">Teal</option>
+                    <option value="crimson">Crimson</option><option value="gold">Gold</option>
+                    <option value="lavender">Lavender</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-danger" onclick="deleteModalData()" style="margin-right:auto;">Clear</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveModalData()" style="width:auto;">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+        const times = ['10:00 - 12:00', '12:00 - 14:00', '14:00 - 16:00', '16:00 - 18:00', '18:00 - 20:00'];
+        
+        let timetableData = JSON.parse(localStorage.getItem('perfect_timetable_db')) || {};
+        let activeEditKey = null;
+        let activeDraggedKey = null;
+
+        function init() {
+            renderGridStructure();
+            renderFormLists();
+        }
+
+        function persist() {
+            localStorage.setItem('perfect_timetable_db', JSON.stringify(timetableData));
+        }
+
+        /* --- Export & Import Capabilities --- */
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(timetableData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "timetable_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                try {
+                    const parsedData = JSON.parse(e.target.result);
+                    if (parsedData && typeof parsedData === 'object') {
+                        timetableData = parsedData;
+                        persist();
+                        renderGridStructure();
+                        renderFormLists();
+                        alert('Timetable successfully imported!');
+                    } else {
+                        alert('Invalid timetable file structure.');
+                    }
+                } catch (err) {
+                    alert('Error loading file. Please upload a valid JSON file.');
+                }
+            };
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0]);
+            }
+            // Reset input so importing the same file again triggers onchange
+            event.target.value = '';
+        }
+
+        function switchView(viewName) {
+            if (viewName === 'grid') {
+                document.getElementById('gridView').style.display = 'block';
+                document.getElementById('entryView').style.display = 'none';
+                document.getElementById('toggleGridBtn').classList.add('active');
+                document.getElementById('toggleEntryBtn').classList.remove('active');
+                renderGridStructure();
+            } else {
+                document.getElementById('gridView').style.display = 'none';
+                document.getElementById('entryView').style.display = 'block';
+                document.getElementById('toggleGridBtn').classList.remove('active');
+                document.getElementById('toggleEntryBtn').classList.add('active');
+                renderFormLists();
+            }
+        }
+
+        function renderGridStructure() {
+            const grid = document.getElementById('mainTimetableGrid');
+            grid.innerHTML = '';
+
+            // 1. Append Top Row Headers
+            const spacer = document.createElement('div');
+            spacer.className = 'time-header-spacer';
+            grid.appendChild(spacer);
+
+            times.forEach(time => {
+                const header = document.createElement('div');
+                header.className = 'time-header';
+                header.textContent = time;
+                grid.appendChild(header);
+            });
+
+            // 2. Append Days and Cards sequentially directly inside the grid parent
+            days.forEach(day => {
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'day-header';
+                dayLabel.textContent = day;
+                grid.appendChild(dayLabel);
+
+                for (let i = 0; i < 5; i++) {
+                    const slotKey = `${day}-${i}`;
+                    const card = document.createElement('div');
+                    card.className = 'slot-card';
+                    card.setAttribute('data-key', slotKey);
+
+                    if (timetableData[slotKey]) {
+                        const data = timetableData[slotKey];
+                        card.classList.add(data.color || 'blue');
+                        card.draggable = true;
+                        
+                        // Check if card contains a valid join link URL
+                        const hasLink = data.link && data.link.trim() !== "";
+                        const linkIcon = hasLink ? ' 🔗' : '';
+
+                        card.innerHTML = `
+                            <div class="subject">${data.subject}</div>
+                            <div class="meta">${data.room || ''}${linkIcon}</div>
+                            <div class="meta">${data.instructor || ''}</div>
+                        `;
+
+                        // Handle item click action contextually
+                        card.addEventListener('click', (e) => {
+                            // If a valid link exists, navigate to it in a new tab immediately
+                            if (hasLink) {
+                                window.open(data.link.trim(), '_blank');
+                            } else {
+                                triggerQuickEdit(slotKey);
+                            }
+                        });
+
+                        // Right-click context handler allows quick modification if the card has an active target redirect link
+                        card.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            triggerQuickEdit(slotKey);
+                        });
+
+                    } else {
+                        card.innerHTML = '<div class="dash">-</div>';
+                        card.addEventListener('click', () => triggerQuickEdit(slotKey));
+                    }
+
+                    // Drag and Drop Event Hooks
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragover', handleDragOver);
+                    card.addEventListener('dragleave', handleDragLeave);
+                    card.addEventListener('drop', handleDrop);
+                    card.addEventListener('dragend', handleDragEnd);
+
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function renderFormLists() {
+            const listContainer = document.getElementById('liveStatusList');
+            listContainer.innerHTML = '';
+            let count = 0;
+
+            days.forEach(day => {
+                for (let i = 0; i < 5; i++) {
+                    const key = `${day}-${i}`;
+                    if (timetableData[key]) {
+                        count++;
+                        const data = timetableData[key];
+                        const item = document.createElement('div');
+                        item.className = `list-item-row ${data.color}`;
+                        
+                        const linkDisplay = data.link ? `<div style="font-size:0.75rem; color:#0091ff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:300px;">🔗 ${data.link}</div>` : '';
+
+                        item.innerHTML = `
+                            <div class="list-item-info">
+                                <span>[${day} ${times[i]}]</span><strong>${data.subject}</strong>
+                                <div style="font-size:0.8rem; opacity:0.7; margin-top:2px;">${data.room || ''} ${data.instructor ? '• ' + data.instructor : ''}</div>
+                                ${linkDisplay}
+                            </div>
+                            <button class="view-toggle-btn active" onclick="triggerQuickEdit('${key}')">Edit</button>
+                        `;
+                        listContainer.appendChild(item);
+                    }
+                }
+            });
+
+            if (count === 0) {
+                listContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem;">No entries saved yet. Fill out the form fields on the left to add your items.</div>';
+            }
+        }
+
+        function handleFormSubmit() {
+            const day = document.getElementById('formDay').value;
+            const timeIndex = document.getElementById('formTime').value;
+            const subject = document.getElementById('formSubject').value.trim();
+            const room = document.getElementById('formRoom').value.trim();
+            const instructor = document.getElementById('formInstructor').value.trim();
+            const link = document.getElementById('formLink').value.trim();
+            const color = document.getElementById('formColor').value;
+
+            if (!subject) {
+                alert('Please provide a subject name.');
+                return;
+            }
+
+            const targetKey = `${day}-${timeIndex}`;
+            timetableData[targetKey] = { subject, room, instructor, link, color };
+            
+            persist();
+            renderFormLists();
+
+            document.getElementById('formSubject').value = '';
+            document.getElementById('formRoom').value = '';
+            document.getElementById('formInstructor').value = '';
+            document.getElementById('formLink').value = '';
+        }
+
+        function triggerQuickEdit(key) {
+            activeEditKey = key;
+            const data = timetableData[key] || {};
+
+            document.getElementById('modalSubject').value = data.subject || '';
+            document.getElementById('modalRoom').value = data.room || '';
+            document.getElementById('modalInstructor').value = data.instructor || '';
+            document.getElementById('modalLink').value = data.link || '';
+            document.getElementById('modalColor').value = data.color || 'blue';
+
+            document.getElementById('quickModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('quickModal').style.display = 'none';
+        }
+
+        function saveModalData() {
+            const subject = document.getElementById('modalSubject').value.trim();
+            const room = document.getElementById('modalRoom').value.trim();
+            const instructor = document.getElementById('modalInstructor').value.trim();
+            const link = document.getElementById('modalLink').value.trim();
+            const color = document.getElementById('modalColor').value;
+
+            if (!subject) {
+                deleteModalData();
+                return;
+            }
+
+            timetableData[activeEditKey] = { subject, room, instructor, link, color };
+            persist();
+            closeModal();
+            renderGridStructure();
+            renderFormLists();
+        }
+
+        function deleteModalData() {
+            delete timetableData[activeEditKey];
+            persist();
+            closeModal();
+            renderGridStructure();
+            renderFormLists();
+        }
+
+        // Drag and Drop Controls
+        function handleDragStart(e) {
+            activeDraggedKey = this.getAttribute('data-key');
+            this.classList.add('dragging');
+        }
+        function handleDragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+        function handleDragLeave() {
+            this.classList.remove('drag-over');
+        }
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const targetKey = this.getAttribute('data-key');
+
+            if (activeDraggedKey && activeDraggedKey !== targetKey) {
+                const tempStorage = timetableData[targetKey];
+                if (timetableData[activeDraggedKey]) {
+                    timetableData[targetKey] = timetableData[activeDraggedKey];
+                } else {
+                    delete timetableData[targetKey];
+                }
+
+                if (tempStorage) {
+                    timetableData[activeDraggedKey] = tempStorage;
+                } else {
+                    delete timetableData[activeDraggedKey];
+                }
+
+                persist();
+                renderGridStructure();
+                renderFormLists();
+            }
+        }
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+        }
+
+        window.onclick = function(e) {
+            if (e.target === document.getElementById('quickModal')) closeModal();
+        }
+
+        init();
+    </script>
+</body>
+</html>
