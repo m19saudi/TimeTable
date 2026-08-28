@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimeTable</title>
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath d='M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z'/%3E%3C/svg%3E">
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath d='M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z'/%3E%3C/svg%3E"
+    >
 
     <style>
+
         :root {
             --bg-color: #090b11;
             --card-empty: #161923;
@@ -43,7 +48,6 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            box-sizing: border-box;
             overflow-x: hidden;
         }
 
@@ -150,7 +154,6 @@
             display: none;
         }
 
-        /* Desktop layout stays as you had it */
         .timetable-grid {
             display: grid;
             grid-template-columns: 100px repeat(5, minmax(160px, 1fr));
@@ -192,9 +195,11 @@
             align-items: center;
             text-align: center;
             padding: 15px;
-            box-sizing: border-box;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                background-color 0.2s;
             user-select: none;
             position: relative;
             min-width: 0;
@@ -256,7 +261,9 @@
             transform: scale(1.1);
         }
 
-        /* Card colors */
+        /* =========================
+           CARD COLORS
+           ========================= */
 
         .slot-card.blue {
             background-color: var(--card-blue);
@@ -344,7 +351,6 @@
             border: 1px solid #232838;
             border-radius: 8px;
             color: white;
-            box-sizing: border-box;
             font-size: 0.95rem;
         }
 
@@ -368,6 +374,10 @@
             font-weight: 600;
             font-size: 0.95rem;
             transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
         }
 
         .btn-primary {
@@ -402,6 +412,7 @@
             justify-content: space-between;
             align-items: center;
             border-left: 4px solid var(--card-blue);
+            gap: 15px;
         }
 
         .list-item-row.pink {
@@ -436,10 +447,19 @@
             border-left-color: var(--card-lavender);
         }
 
+        .list-item-info {
+            min-width: 0;
+        }
+
         .list-item-info span {
             color: var(--text-muted);
             font-size: 0.85rem;
             margin-right: 10px;
+        }
+
+        .list-item-info strong {
+            display: inline-block;
+            max-width: 100%;
         }
 
         /* =========================
@@ -471,11 +491,9 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
-
-        /* =====================================================
-           TABLET LANDSCAPE / LARGE TABLET
-           851px - 1100px
-           ===================================================== */
+        /* =========================
+           TABLET LANDSCAPE
+           ========================= */
 
         @media (min-width: 851px) and (max-width: 1100px) {
 
@@ -503,11 +521,6 @@
                 font-size: 0.75rem;
             }
 
-            /*
-             * Important:
-             * minmax(0, 1fr) allows all 5 days
-             * to fit inside the tablet width.
-             */
             .timetable-grid {
                 grid-template-columns: 55px repeat(5, minmax(0, 1fr));
                 column-gap: 9px;
@@ -552,11 +565,9 @@
             }
         }
 
-
-        /* =====================================================
-           TABLET PORTRAIT / SMALL TABLET
-           600px - 850px
-           ===================================================== */
+        /* =========================
+           TABLET PORTRAIT
+           ========================= */
 
         @media (min-width: 600px) and (max-width: 850px) {
 
@@ -588,12 +599,6 @@
                 font-size: 0.72rem;
             }
 
-            /*
-             * This is the key tablet fix.
-             *
-             * The 5 day columns are now allowed to
-             * shrink equally instead of requiring 160px.
-             */
             .timetable-grid {
                 grid-template-columns: 48px repeat(5, minmax(0, 1fr));
                 column-gap: 6px;
@@ -642,7 +647,6 @@
                 display: none;
             }
 
-            /* Entry view */
             .entry-container {
                 grid-template-columns: 1fr;
                 gap: 25px;
@@ -658,10 +662,9 @@
             }
         }
 
-
-        /* =====================================================
+        /* =========================
            VERY SMALL TABLETS
-           ===================================================== */
+           ========================= */
 
         @media (min-width: 600px) and (max-width: 700px) {
 
@@ -703,10 +706,9 @@
             }
         }
 
-
-        /* =====================================================
+        /* =========================
            MOBILE
-           ===================================================== */
+           ========================= */
 
         @media (max-width: 599px) {
 
@@ -745,9 +747,6 @@
                 display: none;
             }
 
-            /*
-             * On phones the timetable stays compact.
-             */
             .timetable-grid {
                 grid-template-columns: 36px repeat(5, minmax(0, 1fr));
                 column-gap: 4px;
@@ -789,7 +788,6 @@
                 display: none;
             }
 
-            /* Entry view */
             .entry-container {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -816,10 +814,15 @@
                 padding: 22px;
             }
         }
+
     </style>
 </head>
 
 <body>
+
+    <!-- =========================
+         HEADER
+         ========================= -->
 
     <div class="header-container">
 
@@ -829,18 +832,31 @@
 
         <div class="header-right">
 
-            <button class="io-btn" onclick="exportData()">
-                📥 Export
+            <button
+                class="io-btn"
+                onclick="exportJSON()"
+            >
+                📥 Export JSON
             </button>
 
-            <button class="io-btn" onclick="document.getElementById('importFile').click()">
-                📤 Import
+            <button
+                class="io-btn"
+                onclick="exportMasterJS()"
+            >
+                📦 Export Master JS
+            </button>
+
+            <button
+                class="io-btn"
+                onclick="document.getElementById('importFile').click()"
+            >
+                📤 Import JSON
             </button>
 
             <input
                 type="file"
                 id="importFile"
-                style="display: none;"
+                style="display:none;"
                 accept=".json"
                 onchange="importData(event)"
             >
@@ -869,106 +885,218 @@
     </div>
 
 
-    <!-- MAIN GRID VIEW -->
+    <!-- =========================
+         GRID VIEW
+         ========================= -->
 
-    <div id="gridView" class="view-section">
+    <div
+        id="gridView"
+        class="view-section"
+    >
 
-        <div class="timetable-grid" id="mainTimetableGrid">
-            <!-- Grid structure rendered dynamically -->
+        <div
+            class="timetable-grid"
+            id="mainTimetableGrid"
+        >
+            <!-- Grid rendered dynamically -->
         </div>
 
     </div>
 
 
-    <!-- FORM ENTRY VIEW -->
+    <!-- =========================
+         FORM ENTRY VIEW
+         ========================= -->
 
-    <div id="entryView" class="view-section">
+    <div
+        id="entryView"
+        class="view-section"
+    >
 
         <div class="entry-container">
 
             <div class="entry-form">
 
-                <h3>Add / Manage Entry</h3>
+                <h3>
+                    Add / Manage Entry
+                </h3>
 
                 <div class="form-group">
-                    <label for="formDay">Day</label>
+
+                    <label for="formDay">
+                        Day
+                    </label>
 
                     <select id="formDay">
-                        <option value="Sun">Sunday</option>
-                        <option value="Mon">Monday</option>
-                        <option value="Tue">Tuesday</option>
-                        <option value="Wed">Wednesday</option>
-                        <option value="Thu">Thursday</option>
+
+                        <option value="Sun">
+                            Sunday
+                        </option>
+
+                        <option value="Mon">
+                            Monday
+                        </option>
+
+                        <option value="Tue">
+                            Tuesday
+                        </option>
+
+                        <option value="Wed">
+                            Wednesday
+                        </option>
+
+                        <option value="Thu">
+                            Thursday
+                        </option>
+
                     </select>
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="formTime">Time Slot</label>
+
+                    <label for="formTime">
+                        Time Slot
+                    </label>
 
                     <select id="formTime">
-                        <option value="0">10:00 - 12:00</option>
-                        <option value="1">12:00 - 14:00</option>
-                        <option value="2">14:00 - 16:00</option>
-                        <option value="3">16:00 - 18:00</option>
-                        <option value="4">18:00 - 20:00</option>
+
+                        <option value="0">
+                            10:00 - 12:00
+                        </option>
+
+                        <option value="1">
+                            12:00 - 14:00
+                        </option>
+
+                        <option value="2">
+                            14:00 - 16:00
+                        </option>
+
+                        <option value="3">
+                            16:00 - 18:00
+                        </option>
+
+                        <option value="4">
+                            18:00 - 20:00
+                        </option>
+
                     </select>
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="formSubject">Subject Name</label>
+
+                    <label for="formSubject">
+                        Subject Name
+                    </label>
 
                     <input
                         type="text"
                         id="formSubject"
                         placeholder="e.g., Computer Science"
                     >
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="formRoom">Room / Modality</label>
+
+                    <label for="formRoom">
+                        Room / Modality
+                    </label>
 
                     <input
                         type="text"
                         id="formRoom"
                         placeholder="e.g., online, Room 153"
                     >
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="formInstructor">Instructor / Extra</label>
+
+                    <label for="formInstructor">
+                        Instructor / Extra
+                    </label>
 
                     <input
                         type="text"
                         id="formInstructor"
                         placeholder="e.g., Dr. Smith"
                     >
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="formLink">Class Join Link (URL)</label>
+
+                    <label for="formLink">
+                        Class Join Link (URL)
+                    </label>
 
                     <input
                         type="url"
                         id="formLink"
                         placeholder="https://zoom.us/j/... or Blackboard URL"
                     >
+
                 </div>
+
 
                 <div class="form-group">
-                    <label for="formColor">Color Accent</label>
+
+                    <label for="formColor">
+                        Color Accent
+                    </label>
 
                     <select id="formColor">
-                        <option value="blue">Blue</option>
-                        <option value="pink">Pink</option>
-                        <option value="green">Green</option>
-                        <option value="orange">Orange</option>
-                        <option value="purple">Purple</option>
-                        <option value="teal">Teal</option>
-                        <option value="crimson">Crimson</option>
-                        <option value="gold">Gold</option>
-                        <option value="lavender">Lavender</option>
+
+                        <option value="blue">
+                            Blue
+                        </option>
+
+                        <option value="pink">
+                            Pink
+                        </option>
+
+                        <option value="green">
+                            Green
+                        </option>
+
+                        <option value="orange">
+                            Orange
+                        </option>
+
+                        <option value="purple">
+                            Purple
+                        </option>
+
+                        <option value="teal">
+                            Teal
+                        </option>
+
+                        <option value="crimson">
+                            Crimson
+                        </option>
+
+                        <option value="gold">
+                            Gold
+                        </option>
+
+                        <option value="lavender">
+                            Lavender
+                        </option>
+
                     </select>
+
                 </div>
+
+
+                <!-- SAVE -->
 
                 <button
                     class="btn btn-primary"
@@ -977,12 +1105,36 @@
                     Save to Timetable
                 </button>
 
+
+                <!-- WIPE ALL -->
+
+                <button
+                    class="btn btn-danger"
+                    onclick="wipeAllData()"
+                    style="
+                        width:100%;
+                        margin-top:10px;
+                    "
+                >
+                    Wipe All
+                </button>
+
             </div>
 
 
+            <!-- =========================
+                 CURRENT CLASSES
+                 ========================= -->
+
             <div class="entry-list-view">
 
-                <h3 style="margin-top:0; color:var(--text-muted); font-size:1.1rem;">
+                <h3
+                    style="
+                        margin-top:0;
+                        color:var(--text-muted);
+                        font-size:1.1rem;
+                    "
+                >
                     Current Active Classes
                 </h3>
 
@@ -995,53 +1147,131 @@
     </div>
 
 
-    <!-- QUICK EDIT MODAL -->
+    <!-- =========================
+         QUICK EDIT MODAL
+         ========================= -->
 
-    <div id="quickModal" class="modal">
+    <div
+        id="quickModal"
+        class="modal"
+    >
 
         <div class="modal-content">
 
-            <h3 style="margin-top:0; margin-bottom:20px;">
+            <h3
+                style="
+                    margin-top:0;
+                    margin-bottom:20px;
+                "
+            >
                 Modify Class Block
             </h3>
 
+
             <div class="form-group">
-                <label>Subject</label>
-                <input type="text" id="modalSubject">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="modalSubject"
+                >
+
             </div>
 
+
             <div class="form-group">
-                <label>Room</label>
-                <input type="text" id="modalRoom">
+
+                <label>
+                    Room
+                </label>
+
+                <input
+                    type="text"
+                    id="modalRoom"
+                >
+
             </div>
 
+
             <div class="form-group">
-                <label>Instructor</label>
-                <input type="text" id="modalInstructor">
+
+                <label>
+                    Instructor
+                </label>
+
+                <input
+                    type="text"
+                    id="modalInstructor"
+                >
+
             </div>
 
+
             <div class="form-group">
-                <label>Class Join Link (URL)</label>
-                <input type="url" id="modalLink">
+
+                <label>
+                    Class Join Link (URL)
+                </label>
+
+                <input
+                    type="url"
+                    id="modalLink"
+                >
+
             </div>
 
+
             <div class="form-group">
 
-                <label>Color</label>
+                <label>
+                    Color
+                </label>
 
                 <select id="modalColor">
-                    <option value="blue">Blue</option>
-                    <option value="pink">Pink</option>
-                    <option value="green">Green</option>
-                    <option value="orange">Orange</option>
-                    <option value="purple">Purple</option>
-                    <option value="teal">Teal</option>
-                    <option value="crimson">Crimson</option>
-                    <option value="gold">Gold</option>
-                    <option value="lavender">Lavender</option>
+
+                    <option value="blue">
+                        Blue
+                    </option>
+
+                    <option value="pink">
+                        Pink
+                    </option>
+
+                    <option value="green">
+                        Green
+                    </option>
+
+                    <option value="orange">
+                        Orange
+                    </option>
+
+                    <option value="purple">
+                        Purple
+                    </option>
+
+                    <option value="teal">
+                        Teal
+                    </option>
+
+                    <option value="crimson">
+                        Crimson
+                    </option>
+
+                    <option value="gold">
+                        Gold
+                    </option>
+
+                    <option value="lavender">
+                        Lavender
+                    </option>
+
                 </select>
 
             </div>
+
 
             <div class="form-actions">
 
@@ -1075,9 +1305,27 @@
     </div>
 
 
+    <!--
+        IMPORTANT:
+        timetable.js MUST be in the same folder as this HTML.
+    -->
+
+    <script src="timetable.js"></script>
+
+
     <script>
 
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
+        /* =====================================================
+           CONFIGURATION
+           ===================================================== */
+
+        const days = [
+            'Sun',
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu'
+        ];
 
         const times = [
             '10:00 - 12:00',
@@ -1087,116 +1335,383 @@
             '18:00 - 20:00'
         ];
 
-        let timetableData =
-            JSON.parse(localStorage.getItem('perfect_timetable_db')) || {};
+        const LOCAL_STORAGE_KEY =
+            'perfect_timetable_db';
+
+
+        /* =====================================================
+           LOAD USER TIMETABLE
+           ===================================================== */
+
+        let timetableData;
+
+        const savedTimetable =
+            localStorage.getItem(
+                LOCAL_STORAGE_KEY
+            );
+
+
+        if (savedTimetable !== null) {
+
+            /*
+             * Existing user:
+             * always use their local timetable.
+             */
+
+            try {
+
+                const parsed =
+                    JSON.parse(
+                        savedTimetable
+                    );
+
+                if (
+                    parsed &&
+                    typeof parsed === 'object' &&
+                    !Array.isArray(parsed)
+                ) {
+
+                    timetableData = parsed;
+
+                } else {
+
+                    timetableData = {};
+
+                }
+
+            } catch (error) {
+
+                timetableData = {};
+            }
+
+
+        } else {
+
+            /*
+             * First-time user:
+             * copy the master timetable from timetable.js.
+             */
+
+            if (
+                typeof DEFAULT_TIMETABLE !== 'undefined' &&
+                DEFAULT_TIMETABLE &&
+                typeof DEFAULT_TIMETABLE === 'object'
+            ) {
+
+                /*
+                 * Use JSON cloning for broad browser compatibility.
+                 */
+
+                timetableData =
+                    JSON.parse(
+                        JSON.stringify(
+                            DEFAULT_TIMETABLE
+                        )
+                    );
+
+            } else {
+
+                timetableData = {};
+
+            }
+
+
+            /*
+             * Save the master as this user's local timetable.
+             */
+
+            localStorage.setItem(
+                LOCAL_STORAGE_KEY,
+                JSON.stringify(
+                    timetableData
+                )
+            );
+        }
+
 
         let activeEditKey = null;
         let activeDraggedKey = null;
 
 
+        /* =====================================================
+           INITIALIZE
+           ===================================================== */
+
         function init() {
+
             renderGridStructure();
+
             renderFormLists();
         }
 
 
+        /* =====================================================
+           SAVE LOCAL DATA
+           ===================================================== */
+
         function persist() {
+
             localStorage.setItem(
-                'perfect_timetable_db',
-                JSON.stringify(timetableData)
+                LOCAL_STORAGE_KEY,
+                JSON.stringify(
+                    timetableData
+                )
             );
         }
 
 
-        /* =========================
-           EXPORT
-           ========================= */
+        /* =====================================================
+           EXPORT PERSONAL JSON
+           ===================================================== */
 
-        function exportData() {
+        function exportJSON() {
 
             const dataStr =
                 "data:text/json;charset=utf-8," +
                 encodeURIComponent(
-                    JSON.stringify(timetableData, null, 2)
+                    JSON.stringify(
+                        timetableData,
+                        null,
+                        2
+                    )
                 );
+
 
             const downloadAnchor =
                 document.createElement('a');
 
-            downloadAnchor.setAttribute("href", dataStr);
+
+            downloadAnchor.setAttribute(
+                "href",
+                dataStr
+            );
+
 
             downloadAnchor.setAttribute(
                 "download",
                 "timetable_backup.json"
             );
 
-            document.body.appendChild(downloadAnchor);
+
+            document.body.appendChild(
+                downloadAnchor
+            );
+
 
             downloadAnchor.click();
+
 
             downloadAnchor.remove();
         }
 
 
-        /* =========================
-           IMPORT
-           ========================= */
+        /* =====================================================
+           EXPORT MASTER JS
+           ===================================================== */
+
+        function exportMasterJS() {
+
+            const timetableJSON =
+                JSON.stringify(
+                    timetableData,
+                    null,
+                    4
+                );
+
+
+            const jsContent =
+`/*
+ * =========================================================
+ * MASTER TIMETABLE
+ *
+ * Generated by TimeTable.
+ *
+ * Replace your existing timetable.js on GitHub
+ * with this file to publish a new default schedule.
+ *
+ * IMPORTANT:
+ * Existing users keep their own local timetable.
+ * New users will receive this timetable.
+ * =========================================================
+ */
+
+const DEFAULT_TIMETABLE = ${timetableJSON};
+`;
+
+
+            const blob =
+                new Blob(
+                    [jsContent],
+                    {
+                        type:
+                            'application/javascript'
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+
+            const downloadAnchor =
+                document.createElement('a');
+
+
+            downloadAnchor.href = url;
+
+            downloadAnchor.download =
+                'timetable.js';
+
+
+            document.body.appendChild(
+                downloadAnchor
+            );
+
+
+            downloadAnchor.click();
+
+
+            downloadAnchor.remove();
+
+
+            URL.revokeObjectURL(
+                url
+            );
+        }
+
+
+        /* =====================================================
+           IMPORT JSON
+           ===================================================== */
 
         function importData(event) {
 
-            const fileReader = new FileReader();
+            const file =
+                event.target.files[0];
 
-            fileReader.onload = function(e) {
 
-                try {
+            if (!file) {
+                return;
+            }
 
-                    const parsedData =
-                        JSON.parse(e.target.result);
 
-                    if (
-                        parsedData &&
-                        typeof parsedData === 'object'
-                    ) {
+            const fileReader =
+                new FileReader();
 
-                        timetableData = parsedData;
 
-                        persist();
+            fileReader.onload =
+                function(e) {
 
-                        renderGridStructure();
-                        renderFormLists();
+                    try {
+
+                        const parsedData =
+                            JSON.parse(
+                                e.target.result
+                            );
+
+
+                        if (
+                            parsedData &&
+                            typeof parsedData === 'object' &&
+                            !Array.isArray(parsedData)
+                        ) {
+
+                            timetableData =
+                                parsedData;
+
+
+                            persist();
+
+
+                            renderGridStructure();
+
+                            renderFormLists();
+
+
+                            alert(
+                                'Timetable successfully imported!'
+                            );
+
+
+                        } else {
+
+                            alert(
+                                'Invalid timetable file structure.'
+                            );
+                        }
+
+
+                    } catch (err) {
 
                         alert(
-                            'Timetable successfully imported!'
-                        );
-
-                    } else {
-
-                        alert(
-                            'Invalid timetable file structure.'
+                            'Error loading file. Please upload a valid JSON file.'
                         );
                     }
+                };
 
-                } catch (err) {
 
-                    alert(
-                        'Error loading file. Please upload a valid JSON file.'
-                    );
-                }
-            };
+            fileReader.readAsText(
+                file
+            );
 
-            if (event.target.files[0]) {
-                fileReader.readAsText(
-                    event.target.files[0]
-                );
-            }
+
+            /*
+             * Allows the same file to be imported again.
+             */
 
             event.target.value = '';
         }
 
 
-        /* =========================
+        /* =====================================================
+           WIPE ALL
+           ===================================================== */
+
+        function wipeAllData() {
+
+            const confirmed =
+                confirm(
+                    'Are you sure you want to wipe the entire timetable? This cannot be undone.'
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            /*
+             * Completely empty the user's timetable.
+             *
+             * We intentionally do NOT reload
+             * DEFAULT_TIMETABLE.
+             */
+
+            timetableData = {};
+
+
+            persist();
+
+
+            renderGridStructure();
+
+            renderFormLists();
+
+
+            clearFormFields();
+
+
+            alert(
+                'The entire timetable has been wiped.'
+            );
+        }
+
+
+        /* =====================================================
            VIEW SWITCH
-           ========================= */
+           ===================================================== */
 
         function switchView(viewName) {
 
@@ -1204,48 +1719,69 @@
 
                 document.getElementById(
                     'gridView'
-                ).style.display = 'block';
+                ).style.display =
+                    'block';
+
 
                 document.getElementById(
                     'entryView'
-                ).style.display = 'none';
+                ).style.display =
+                    'none';
+
 
                 document.getElementById(
                     'toggleGridBtn'
-                ).classList.add('active');
+                ).classList.add(
+                    'active'
+                );
+
 
                 document.getElementById(
                     'toggleEntryBtn'
-                ).classList.remove('active');
+                ).classList.remove(
+                    'active'
+                );
+
 
                 renderGridStructure();
+
 
             } else {
 
                 document.getElementById(
                     'gridView'
-                ).style.display = 'none';
+                ).style.display =
+                    'none';
+
 
                 document.getElementById(
                     'entryView'
-                ).style.display = 'block';
+                ).style.display =
+                    'block';
+
 
                 document.getElementById(
                     'toggleGridBtn'
-                ).classList.remove('active');
+                ).classList.remove(
+                    'active'
+                );
+
 
                 document.getElementById(
                     'toggleEntryBtn'
-                ).classList.add('active');
+                ).classList.add(
+                    'active'
+                );
+
 
                 renderFormLists();
             }
         }
 
 
-        /* =========================
+        /* =====================================================
            GRID RENDER
-           ========================= */
+           ===================================================== */
 
         function renderGridStructure() {
 
@@ -1254,192 +1790,336 @@
                     'mainTimetableGrid'
                 );
 
+
             grid.innerHTML = '';
 
 
-            /* Header spacer */
+            /*
+             * Header spacer
+             */
 
             const spacer =
-                document.createElement('div');
+                document.createElement(
+                    'div'
+                );
+
 
             spacer.className =
                 'time-header-spacer';
 
-            grid.appendChild(spacer);
+
+            grid.appendChild(
+                spacer
+            );
 
 
-            /* Time headers */
+            /*
+             * Time headers
+             */
 
-            times.forEach(time => {
+            times.forEach(
+                time => {
 
-                const header =
-                    document.createElement('div');
-
-                header.className =
-                    'time-header';
-
-                header.textContent = time;
-
-                grid.appendChild(header);
-            });
+                    const header =
+                        document.createElement(
+                            'div'
+                        );
 
 
-            /* Days */
-
-            days.forEach(day => {
-
-                const dayLabel =
-                    document.createElement('div');
-
-                dayLabel.className =
-                    'day-header';
-
-                dayLabel.textContent = day;
-
-                grid.appendChild(dayLabel);
+                    header.className =
+                        'time-header';
 
 
-                /* Five time slots */
+                    header.textContent =
+                        time;
 
-                for (let i = 0; i < 5; i++) {
 
-                    const slotKey =
-                        `${day}-${i}`;
+                    grid.appendChild(
+                        header
+                    );
+                }
+            );
 
-                    const card =
-                        document.createElement('div');
 
-                    card.className =
-                        'slot-card';
+            /*
+             * Days
+             */
 
-                    card.setAttribute(
-                        'data-key',
-                        slotKey
+            days.forEach(
+                day => {
+
+                    const dayLabel =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    dayLabel.className =
+                        'day-header';
+
+
+                    dayLabel.textContent =
+                        day;
+
+
+                    grid.appendChild(
+                        dayLabel
                     );
 
 
-                    if (timetableData[slotKey]) {
+                    /*
+                     * Five time slots
+                     */
 
-                        const data =
-                            timetableData[slotKey];
+                    for (
+                        let i = 0;
+                        i < 5;
+                        i++
+                    ) {
 
-                        card.classList.add(
-                            data.color || 'blue'
+                        const slotKey =
+                            `${day}-${i}`;
+
+
+                        const card =
+                            document.createElement(
+                                'div'
+                            );
+
+
+                        card.className =
+                            'slot-card';
+
+
+                        card.setAttribute(
+                            'data-key',
+                            slotKey
                         );
 
-                        card.draggable = true;
+
+                        /*
+                         * Filled slot
+                         */
+
+                        if (
+                            timetableData[
+                                slotKey
+                            ]
+                        ) {
+
+                            const data =
+                                timetableData[
+                                    slotKey
+                                ];
 
 
-                        const hasLink =
-                            data.link &&
-                            data.link.trim() !== "";
+                            card.classList.add(
+                                data.color ||
+                                'blue'
+                            );
 
 
-                        const linkIcon =
-                            hasLink ? ' 🔗' : '';
+                            card.draggable =
+                                true;
 
 
-                        card.innerHTML = `
-                            <div class="subject">
-                                ${data.subject}
-                            </div>
-
-                            <div class="meta">
-                                ${data.room || ''}${linkIcon}
-                            </div>
-
-                            <div class="meta">
-                                ${data.instructor || ''}
-                            </div>
-                        `;
+                            const hasLink =
+                                data.link &&
+                                data.link.trim() !== '';
 
 
-                        card.addEventListener(
-                            'click',
-                            () => {
+                            /*
+                             * Subject
+                             */
 
-                                if (hasLink) {
+                            const subject =
+                                document.createElement(
+                                    'div'
+                                );
 
-                                    window.open(
-                                        data.link.trim(),
-                                        '_blank'
-                                    );
 
-                                } else {
+                            subject.className =
+                                'subject';
+
+
+                            subject.textContent =
+                                data.subject ||
+                                '';
+
+
+                            /*
+                             * Room
+                             */
+
+                            const room =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            room.className =
+                                'meta';
+
+
+                            room.textContent =
+                                (
+                                    data.room ||
+                                    ''
+                                ) +
+                                (
+                                    hasLink
+                                        ? ' 🔗'
+                                        : ''
+                                );
+
+
+                            /*
+                             * Instructor
+                             */
+
+                            const instructor =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            instructor.className =
+                                'meta';
+
+
+                            instructor.textContent =
+                                data.instructor ||
+                                '';
+
+
+                            card.appendChild(
+                                subject
+                            );
+
+
+                            card.appendChild(
+                                room
+                            );
+
+
+                            card.appendChild(
+                                instructor
+                            );
+
+
+                            /*
+                             * Clicking a class:
+                             *
+                             * Link exists → open link.
+                             * No link → edit class.
+                             */
+
+                            card.addEventListener(
+                                'click',
+                                () => {
+
+                                    if (
+                                        hasLink
+                                    ) {
+
+                                        window.open(
+                                            data.link.trim(),
+                                            '_blank'
+                                        );
+
+                                    } else {
+
+                                        triggerQuickEdit(
+                                            slotKey
+                                        );
+                                    }
+                                }
+                            );
+
+
+                            /*
+                             * Right click → edit.
+                             */
+
+                            card.addEventListener(
+                                'contextmenu',
+                                (e) => {
+
+                                    e.preventDefault();
 
                                     triggerQuickEdit(
                                         slotKey
                                     );
                                 }
-                            }
+                            );
+
+
+                        } else {
+
+                            /*
+                             * Empty slot
+                             */
+
+                            card.innerHTML =
+                                '<div class="dash">-</div>';
+
+
+                            card.addEventListener(
+                                'click',
+                                () =>
+                                    triggerQuickEdit(
+                                        slotKey
+                                    )
+                            );
+                        }
+
+
+                        /*
+                         * Drag and drop
+                         */
+
+                        card.addEventListener(
+                            'dragstart',
+                            handleDragStart
                         );
 
 
                         card.addEventListener(
-                            'contextmenu',
-                            (e) => {
-
-                                e.preventDefault();
-
-                                triggerQuickEdit(
-                                    slotKey
-                                );
-                            }
+                            'dragover',
+                            handleDragOver
                         );
 
 
-                    } else {
+                        card.addEventListener(
+                            'dragleave',
+                            handleDragLeave
+                        );
 
-                        card.innerHTML =
-                            '<div class="dash">-</div>';
 
                         card.addEventListener(
-                            'click',
-                            () =>
-                                triggerQuickEdit(
-                                    slotKey
-                                )
+                            'drop',
+                            handleDrop
+                        );
+
+
+                        card.addEventListener(
+                            'dragend',
+                            handleDragEnd
+                        );
+
+
+                        grid.appendChild(
+                            card
                         );
                     }
-
-
-                    /* Drag and drop */
-
-                    card.addEventListener(
-                        'dragstart',
-                        handleDragStart
-                    );
-
-                    card.addEventListener(
-                        'dragover',
-                        handleDragOver
-                    );
-
-                    card.addEventListener(
-                        'dragleave',
-                        handleDragLeave
-                    );
-
-                    card.addEventListener(
-                        'drop',
-                        handleDrop
-                    );
-
-                    card.addEventListener(
-                        'dragend',
-                        handleDragEnd
-                    );
-
-
-                    grid.appendChild(card);
                 }
-            });
+            );
         }
 
 
-        /* =========================
+        /* =====================================================
            FORM LIST
-           ========================= */
+           ===================================================== */
 
         function renderFormLists() {
 
@@ -1448,93 +2128,228 @@
                     'liveStatusList'
                 );
 
-            listContainer.innerHTML = '';
+
+            listContainer.innerHTML =
+                '';
+
 
             let count = 0;
 
 
-            days.forEach(day => {
+            days.forEach(
+                day => {
 
-                for (let i = 0; i < 5; i++) {
+                    for (
+                        let i = 0;
+                        i < 5;
+                        i++
+                    ) {
 
-                    const key =
-                        `${day}-${i}`;
-
-
-                    if (timetableData[key]) {
-
-                        count++;
-
-                        const data =
-                            timetableData[key];
+                        const key =
+                            `${day}-${i}`;
 
 
-                        const item =
-                            document.createElement(
-                                'div'
+                        if (
+                            timetableData[
+                                key
+                            ]
+                        ) {
+
+                            count++;
+
+
+                            const data =
+                                timetableData[
+                                    key
+                                ];
+
+
+                            const item =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            item.className =
+                                `list-item-row ${
+                                    data.color ||
+                                    'blue'
+                                }`;
+
+
+                            /*
+                             * Information container
+                             */
+
+                            const info =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            info.className =
+                                'list-item-info';
+
+
+                            /*
+                             * Day/time
+                             */
+
+                            const schedule =
+                                document.createElement(
+                                    'span'
+                                );
+
+
+                            schedule.textContent =
+                                `[${day} ${times[i]}]`;
+
+
+                            /*
+                             * Subject
+                             */
+
+                            const subject =
+                                document.createElement(
+                                    'strong'
+                                );
+
+
+                            subject.textContent =
+                                data.subject ||
+                                '';
+
+
+                            /*
+                             * Room/instructor
+                             */
+
+                            const details =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            details.style.cssText =
+                                `
+                                font-size:0.8rem;
+                                opacity:0.7;
+                                margin-top:2px;
+                                `;
+
+
+                            details.textContent =
+                                (
+                                    data.room ||
+                                    ''
+                                ) +
+                                (
+                                    data.instructor
+                                        ? ' • ' +
+                                          data.instructor
+                                        : ''
+                                );
+
+
+                            info.appendChild(
+                                schedule
                             );
 
-                        item.className =
-                            `list-item-row ${data.color}`;
+
+                            info.appendChild(
+                                subject
+                            );
 
 
-                        const linkDisplay =
-                            data.link
-                                ? `
-                                    <div style="
-                                        font-size:0.75rem;
-                                        color:#0091ff;
-                                        overflow:hidden;
-                                        text-overflow:ellipsis;
-                                        white-space:nowrap;
-                                        max-width:300px;
-                                    ">
-                                        🔗 ${data.link}
-                                    </div>
-                                `
-                                : '';
+                            info.appendChild(
+                                details
+                            );
 
 
-                        item.innerHTML = `
-                            <div class="list-item-info">
+                            /*
+                             * Link
+                             */
 
-                                <span>
-                                    [${day} ${times[i]}]
-                                </span>
+                            if (
+                                data.link &&
+                                data.link.trim() !== ''
+                            ) {
 
-                                <strong>
-                                    ${data.subject}
-                                </strong>
-
-                                <div style="
-                                    font-size:0.8rem;
-                                    opacity:0.7;
-                                    margin-top:2px;
-                                ">
-                                    ${data.room || ''}
-                                    ${data.instructor
-                                        ? '• ' + data.instructor
-                                        : ''}
-                                </div>
-
-                                ${linkDisplay}
-
-                            </div>
-
-                            <button
-                                class="view-toggle-btn active"
-                                onclick="triggerQuickEdit('${key}')"
-                            >
-                                Edit
-                            </button>
-                        `;
+                                const linkDisplay =
+                                    document.createElement(
+                                        'div'
+                                    );
 
 
-                        listContainer.appendChild(item);
+                                linkDisplay.style.cssText =
+                                    `
+                                    font-size:0.75rem;
+                                    color:#0091ff;
+                                    overflow:hidden;
+                                    text-overflow:ellipsis;
+                                    white-space:nowrap;
+                                    max-width:300px;
+                                    `;
+
+
+                                linkDisplay.textContent =
+                                    '🔗 ' +
+                                    data.link;
+
+
+                                info.appendChild(
+                                    linkDisplay
+                                );
+                            }
+
+
+                            /*
+                             * Edit button
+                             */
+
+                            const editButton =
+                                document.createElement(
+                                    'button'
+                                );
+
+
+                            editButton.className =
+                                'view-toggle-btn active';
+
+
+                            editButton.textContent =
+                                'Edit';
+
+
+                            editButton.onclick =
+                                () =>
+                                    triggerQuickEdit(
+                                        key
+                                    );
+
+
+                            item.appendChild(
+                                info
+                            );
+
+
+                            item.appendChild(
+                                editButton
+                            );
+
+
+                            listContainer.appendChild(
+                                item
+                            );
+                        }
                     }
                 }
-            });
+            );
 
+
+            /*
+             * Empty timetable
+             */
 
             if (count === 0) {
 
@@ -1552,9 +2367,9 @@
         }
 
 
-        /* =========================
+        /* =====================================================
            FORM SUBMIT
-           ========================= */
+           ===================================================== */
 
         function handleFormSubmit() {
 
@@ -1563,30 +2378,36 @@
                     'formDay'
                 ).value;
 
+
             const timeIndex =
                 document.getElementById(
                     'formTime'
                 ).value;
+
 
             const subject =
                 document.getElementById(
                     'formSubject'
                 ).value.trim();
 
+
             const room =
                 document.getElementById(
                     'formRoom'
                 ).value.trim();
+
 
             const instructor =
                 document.getElementById(
                     'formInstructor'
                 ).value.trim();
 
+
             const link =
                 document.getElementById(
                     'formLink'
                 ).value.trim();
+
 
             const color =
                 document.getElementById(
@@ -1609,31 +2430,52 @@
 
 
             timetableData[targetKey] = {
+
                 subject,
+
                 room,
+
                 instructor,
+
                 link,
+
                 color
+
             };
 
 
             persist();
 
+
             renderGridStructure();
+
             renderFormLists();
 
+
+            clearFormFields();
+        }
+
+
+        /* =====================================================
+           CLEAR FORM
+           ===================================================== */
+
+        function clearFormFields() {
 
             document.getElementById(
                 'formSubject'
             ).value = '';
 
+
             document.getElementById(
                 'formRoom'
             ).value = '';
 
+
             document.getElementById(
                 'formInstructor'
             ).value = '';
+
 
             document.getElementById(
                 'formLink'
@@ -1641,83 +2483,114 @@
         }
 
 
-        /* =========================
+        /* =====================================================
            QUICK EDIT
-           ========================= */
+           ===================================================== */
 
         function triggerQuickEdit(key) {
 
-            activeEditKey = key;
+            activeEditKey =
+                key;
+
 
             const data =
-                timetableData[key] || {};
+                timetableData[key] ||
+                {};
 
 
             document.getElementById(
                 'modalSubject'
             ).value =
-                data.subject || '';
+                data.subject ||
+                '';
 
 
             document.getElementById(
                 'modalRoom'
             ).value =
-                data.room || '';
+                data.room ||
+                '';
 
 
             document.getElementById(
                 'modalInstructor'
             ).value =
-                data.instructor || '';
+                data.instructor ||
+                '';
 
 
             document.getElementById(
                 'modalLink'
             ).value =
-                data.link || '';
+                data.link ||
+                '';
 
 
             document.getElementById(
                 'modalColor'
             ).value =
-                data.color || 'blue';
+                data.color ||
+                'blue';
 
 
             document.getElementById(
                 'quickModal'
-            ).style.display = 'flex';
+            ).style.display =
+                'flex';
         }
 
+
+        /* =====================================================
+           CLOSE MODAL
+           ===================================================== */
 
         function closeModal() {
 
             document.getElementById(
                 'quickModal'
-            ).style.display = 'none';
+            ).style.display =
+                'none';
+
+
+            activeEditKey =
+                null;
         }
 
 
+        /* =====================================================
+           SAVE MODAL
+           ===================================================== */
+
         function saveModalData() {
+
+            if (!activeEditKey) {
+                return;
+            }
+
 
             const subject =
                 document.getElementById(
                     'modalSubject'
                 ).value.trim();
 
+
             const room =
                 document.getElementById(
                     'modalRoom'
                 ).value.trim();
+
 
             const instructor =
                 document.getElementById(
                     'modalInstructor'
                 ).value.trim();
 
+
             const link =
                 document.getElementById(
                     'modalLink'
                 ).value.trim();
+
 
             const color =
                 document.getElementById(
@@ -1733,40 +2606,66 @@
             }
 
 
-            timetableData[activeEditKey] = {
+            timetableData[
+                activeEditKey
+            ] = {
+
                 subject,
+
                 room,
+
                 instructor,
+
                 link,
+
                 color
+
             };
 
 
             persist();
 
+
             closeModal();
 
+
             renderGridStructure();
+
             renderFormLists();
         }
 
+
+        /* =====================================================
+           DELETE MODAL DATA
+           ===================================================== */
 
         function deleteModalData() {
 
-            delete timetableData[activeEditKey];
+            if (!activeEditKey) {
+                return;
+            }
+
+
+            delete timetableData[
+                activeEditKey
+            ];
+
 
             persist();
 
+
             closeModal();
 
+
             renderGridStructure();
+
             renderFormLists();
         }
 
 
-        /* =========================
-           DRAG & DROP
-           ========================= */
+        /* =====================================================
+           DRAG START
+           ===================================================== */
 
         function handleDragStart(e) {
 
@@ -1775,21 +2674,41 @@
                     'data-key'
                 );
 
+
             this.classList.add(
                 'dragging'
+            );
+
+
+            e.dataTransfer.effectAllowed =
+                'move';
+
+
+            e.dataTransfer.setData(
+                'text/plain',
+                activeDraggedKey
             );
         }
 
 
+        /* =====================================================
+           DRAG OVER
+           ===================================================== */
+
         function handleDragOver(e) {
 
             e.preventDefault();
+
 
             this.classList.add(
                 'drag-over'
             );
         }
 
+
+        /* =====================================================
+           DRAG LEAVE
+           ===================================================== */
 
         function handleDragLeave() {
 
@@ -1799,9 +2718,14 @@
         }
 
 
+        /* =====================================================
+           DROP
+           ===================================================== */
+
         function handleDrop(e) {
 
             e.preventDefault();
+
 
             this.classList.remove(
                 'drag-over'
@@ -1820,8 +2744,14 @@
             ) {
 
                 const tempStorage =
-                    timetableData[targetKey];
+                    timetableData[
+                        targetKey
+                    ];
 
+
+                /*
+                 * Move dragged item
+                 */
 
                 if (
                     timetableData[
@@ -1829,7 +2759,9 @@
                     ]
                 ) {
 
-                    timetableData[targetKey] =
+                    timetableData[
+                        targetKey
+                    ] =
                         timetableData[
                             activeDraggedKey
                         ];
@@ -1842,11 +2774,17 @@
                 }
 
 
+                /*
+                 * Put target item into
+                 * original dragged position.
+                 */
+
                 if (tempStorage) {
 
                     timetableData[
                         activeDraggedKey
-                    ] = tempStorage;
+                    ] =
+                        tempStorage;
 
                 } else {
 
@@ -1858,40 +2796,55 @@
 
                 persist();
 
+
                 renderGridStructure();
+
                 renderFormLists();
             }
         }
 
+
+        /* =====================================================
+           DRAG END
+           ===================================================== */
 
         function handleDragEnd() {
 
             this.classList.remove(
                 'dragging'
             );
+
+
+            activeDraggedKey =
+                null;
         }
 
 
-        /* =========================
-           CLOSE MODAL
-           ========================= */
+        /* =====================================================
+           CLOSE MODAL WHEN CLICKING OUTSIDE
+           ===================================================== */
 
-        window.onclick = function(e) {
+        window.onclick =
+            function(e) {
 
-            if (
-                e.target ===
-                document.getElementById(
-                    'quickModal'
-                )
-            ) {
-                closeModal();
-            }
-        };
+                const modal =
+                    document.getElementById(
+                        'quickModal'
+                    );
 
 
-        /* =========================
-           START
-           ========================= */
+                if (
+                    e.target === modal
+                ) {
+
+                    closeModal();
+                }
+            };
+
+
+        /* =====================================================
+           START APPLICATION
+           ===================================================== */
 
         init();
 
