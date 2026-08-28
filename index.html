@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>TimeTable</title>
 
     <link
@@ -11,11 +18,23 @@
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath d='M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z'/%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z'/%3E%3C/svg%3E"
     >
 
+    <!--
+        IMPORTANT:
+        This loads your master timetable.
+        Keep timetable.js in the same GitHub folder
+        as this index.html.
+    -->
+
+    <script src="timetable.js"></script>
+
+
     <style>
 
         :root {
+
             --bg-color: #090b11;
             --card-empty: #161923;
+
             --card-blue: #0091ff;
             --card-pink: #d02b9e;
             --card-green: #00bfa5;
@@ -25,245 +44,415 @@
             --card-crimson: #e0115f;
             --card-gold: #d4af37;
             --card-lavender: #b19ffb;
+
             --text-main: #ffffff;
             --text-muted: #62697e;
         }
 
+
         * {
             box-sizing: border-box;
         }
+
 
         html {
             width: 100%;
             overflow-x: hidden;
         }
 
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                'Segoe UI',
+                Roboto,
+                sans-serif;
+
             background-color: var(--bg-color);
+
             color: var(--text-main);
+
             margin: 0;
+
             padding: 20px 60px;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             min-height: 100vh;
+
             overflow-x: hidden;
         }
+
 
         /* =========================
            HEADER
            ========================= */
 
         .header-container {
+
             width: 100%;
+
             max-width: 1300px;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             margin-bottom: 20px;
         }
 
+
         .logo {
+
             font-size: 1.8rem;
+
             font-weight: 700;
+
             letter-spacing: -0.5px;
+
             white-space: nowrap;
         }
 
+
         .logo span {
+
             font-weight: 300;
+
             color: #a0a5b5;
         }
 
+
         .header-right {
+
             display: flex;
+
             align-items: center;
-            gap: 12px;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+
+            justify-content: flex-end;
         }
 
-        .view-toggle-btn {
-            background: none;
-            border: 1px solid #232838;
-            color: var(--text-muted);
-            padding: 8px 16px;
+
+        .view-toggle-btn,
+        .io-btn {
+
             border-radius: 20px;
+
             cursor: pointer;
+
             font-weight: 500;
-            font-size: 0.85rem;
+
+            font-size: 0.82rem;
+
             transition: all 0.2s;
+
             white-space: nowrap;
         }
 
+
+        .view-toggle-btn {
+
+            background: none;
+
+            border: 1px solid #232838;
+
+            color: var(--text-muted);
+
+            padding: 8px 14px;
+        }
+
+
         .view-toggle-btn.active {
+
             background-color: #161923;
+
             color: var(--text-main);
+
             border-color: #3b4257;
         }
 
+
         .io-btn {
+
             background-color: #161923;
+
             border: 1px solid #3b4257;
+
             color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.2s;
+
+            padding: 8px 12px;
+
             display: flex;
+
             align-items: center;
+
             gap: 6px;
-            white-space: nowrap;
         }
 
-        .io-btn:hover {
+
+        .io-btn:hover,
+        .view-toggle-btn:hover {
+
             background-color: #232838;
+
             border-color: var(--card-blue);
         }
 
+
         .badge {
-            background-color: rgba(0, 191, 165, 0.1);
+
+            background-color:
+                rgba(0, 191, 165, 0.1);
+
             color: #00bfa5;
-            padding: 8px 18px;
+
+            padding: 8px 14px;
+
             border-radius: 20px;
-            font-size: 0.85rem;
+
+            font-size: 0.82rem;
+
             font-weight: 500;
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
-            border: 1px solid rgba(0, 191, 165, 0.2);
+
+            border:
+                1px solid rgba(0, 191, 165, 0.2);
+
             white-space: nowrap;
         }
 
+
         .badge::before {
+
             content: "●";
+
             font-size: 0.7rem;
         }
 
+
         /* =========================
-           MAIN VIEW
+           MAIN
            ========================= */
 
         .view-section {
+
             width: 100%;
+
             max-width: 1300px;
         }
+
 
         #entryView {
             display: none;
         }
 
+
+        /* =========================
+           GRID
+           ========================= */
+
         .timetable-grid {
+
             display: grid;
-            grid-template-columns: 100px repeat(5, minmax(160px, 1fr));
+
+            grid-template-columns:
+                100px repeat(5, minmax(160px, 1fr));
+
             row-gap: 12px;
+
             column-gap: 24px;
+
             width: 100%;
         }
 
+
         .time-header {
+
             color: var(--text-muted);
+
             font-size: 0.9rem;
+
             font-weight: 500;
+
             text-align: center;
+
             padding-bottom: 5px;
+
             white-space: nowrap;
         }
 
+
         .day-header {
+
             color: #a0a5b5;
+
             font-weight: 600;
+
             font-size: 1.05rem;
+
             display: flex;
+
             align-items: center;
+
             justify-content: flex-start;
+
             height: 120px;
         }
 
+
         /* =========================
-           TIMETABLE CARDS
+           CARDS
            ========================= */
 
         .slot-card {
+
             background-color: var(--card-empty);
+
             height: 120px;
+
             border-radius: 12px;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             align-items: center;
+
             text-align: center;
+
             padding: 15px;
+
             cursor: pointer;
+
             transition:
                 transform 0.2s,
                 box-shadow 0.2s,
                 background-color 0.2s;
+
             user-select: none;
+
             position: relative;
+
             min-width: 0;
+
             overflow: hidden;
         }
 
+
         .slot-card:hover {
+
             transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.3);
         }
+
 
         .slot-card.dragging {
+
             opacity: 0.3;
-            border: 2px dashed #ffffff;
+
+            border:
+                2px dashed #ffffff;
         }
+
 
         .slot-card.drag-over {
+
             background-color: #202536;
-            box-shadow: 0 0 15px rgba(0, 145, 255, 0.2);
+
+            box-shadow:
+                0 0 15px rgba(0,145,255,0.2);
         }
 
+
         .slot-card .dash {
+
             color: #383f52;
+
             font-size: 1.4rem;
+
             font-weight: 400;
         }
 
+
         .slot-card .subject {
+
             font-weight: 700;
+
             font-size: 1.05rem;
+
             margin-bottom: 5px;
+
             letter-spacing: -0.2px;
+
             max-width: 100%;
+
             overflow: hidden;
+
             text-overflow: ellipsis;
+
             white-space: nowrap;
         }
+
 
         .slot-card .meta {
+
             font-size: 0.8rem;
+
             opacity: 0.8;
+
             margin-top: 2px;
+
             max-width: 100%;
+
             overflow: hidden;
+
             text-overflow: ellipsis;
+
             white-space: nowrap;
         }
 
+
         .slot-card .link-hint {
+
             position: absolute;
+
             bottom: 6px;
+
             right: 8px;
+
             font-size: 0.75rem;
+
             opacity: 0.6;
         }
 
+
         .slot-card:hover .link-hint {
+
             opacity: 1;
+
             transform: scale(1.1);
         }
 
-        /* =========================
-           CARD COLORS
-           ========================= */
 
         .slot-card.blue {
             background-color: var(--card-blue);
@@ -310,110 +499,203 @@
             color: #090b11;
         }
 
+
         /* =========================
            ENTRY VIEW
            ========================= */
 
         .entry-container {
+
             display: grid;
+
             grid-template-columns: 1fr 2fr;
+
             gap: 40px;
+
             background-color: #11141d;
+
             padding: 40px;
+
             border-radius: 16px;
+
             border: 1px solid #1f2433;
         }
 
+
         .entry-form h3 {
+
             margin-top: 0;
+
             margin-bottom: 20px;
+
             font-size: 1.3rem;
         }
 
+
         .form-group {
+
             margin-bottom: 18px;
         }
 
+
         .form-group label {
+
             display: block;
+
             font-size: 0.8rem;
+
             color: var(--text-muted);
+
             margin-bottom: 6px;
+
             text-transform: uppercase;
+
             letter-spacing: 0.5px;
         }
 
+
         .form-group input,
         .form-group select {
+
             width: 100%;
+
             padding: 12px;
+
             background-color: var(--bg-color);
+
             border: 1px solid #232838;
+
             border-radius: 8px;
+
             color: white;
+
             font-size: 0.95rem;
         }
+
 
         .form-group input:focus,
         .form-group select:focus {
+
             outline: none;
+
             border-color: var(--card-blue);
         }
 
+
         .form-actions {
+
             display: flex;
+
             gap: 10px;
+
             margin-top: 25px;
         }
 
+
         .btn {
+
             padding: 12px 24px;
+
             border-radius: 8px;
+
             border: none;
+
             cursor: pointer;
+
             font-weight: 600;
+
             font-size: 0.95rem;
+
             transition: opacity 0.2s;
         }
 
+
         .btn:hover {
-            opacity: 0.9;
+            opacity: 0.85;
         }
 
+
         .btn-primary {
+
             background-color: var(--card-blue);
+
             color: white;
+
             width: 100%;
         }
 
+
         .btn-secondary {
+
             background-color: #232838;
+
             color: white;
         }
+
 
         .btn-danger {
+
             background-color: #d32f2f;
+
             color: white;
         }
 
+
+        .wipe-all-btn {
+
+            margin-top: 10px;
+
+            width: 100%;
+
+            background-color: #4a1717;
+
+            border: 1px solid #d32f2f;
+
+            color: #ff8585;
+        }
+
+
+        .wipe-all-btn:hover {
+
+            background-color: #d32f2f;
+
+            color: white;
+        }
+
+
         .entry-list-view {
+
             border-left: 1px solid #232838;
+
             padding-left: 40px;
+
             max-height: 500px;
+
             overflow-y: auto;
         }
 
+
         .list-item-row {
+
             background-color: var(--bg-color);
+
             padding: 15px 20px;
+
             border-radius: 10px;
+
             margin-bottom: 12px;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             border-left: 4px solid var(--card-blue);
+
             gap: 15px;
         }
+
 
         .list-item-row.pink {
             border-left-color: var(--card-pink);
@@ -447,368 +729,558 @@
             border-left-color: var(--card-lavender);
         }
 
+
         .list-item-info {
+
             min-width: 0;
         }
 
+
         .list-item-info span {
+
             color: var(--text-muted);
+
             font-size: 0.85rem;
+
             margin-right: 10px;
         }
 
-        .list-item-info strong {
-            display: inline-block;
-            max-width: 100%;
-        }
 
         /* =========================
            MODAL
            ========================= */
 
         .modal {
+
             display: none;
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
-            background-color: rgba(0,0,0,0.7);
+
+            background-color:
+                rgba(0,0,0,0.7);
+
             backdrop-filter: blur(4px);
+
             justify-content: center;
+
             align-items: center;
+
             z-index: 100;
+
             padding: 20px;
         }
 
+
         .modal-content {
+
             background-color: #11141d;
+
             padding: 30px;
+
             border-radius: 16px;
+
             width: 340px;
+
             max-width: 100%;
+
             border: 1px solid #232838;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+
+            box-shadow:
+                0 20px 40px rgba(0,0,0,0.5);
         }
+
+
+        /* =========================
+           MASTER BUTTON
+           ========================= */
+
+        .master-btn {
+
+            border-color: #00bfa5;
+
+            color: #00bfa5;
+        }
+
+
+        .master-btn:hover {
+
+            background-color:
+                rgba(0,191,165,0.12);
+
+            border-color: #00bfa5;
+        }
+
 
         /* =========================
            TABLET LANDSCAPE
            ========================= */
 
-        @media (min-width: 851px) and (max-width: 1100px) {
+        @media
+        (min-width: 851px)
+        and
+        (max-width: 1100px) {
 
             body {
                 padding: 16px 24px;
             }
 
+
             .header-container {
+
                 max-width: 100%;
+
                 margin-bottom: 16px;
             }
 
+
             .header-right {
-                gap: 7px;
+                gap: 6px;
             }
+
 
             .io-btn,
             .view-toggle-btn {
-                padding: 7px 10px;
-                font-size: 0.75rem;
+
+                padding: 7px 9px;
+
+                font-size: 0.72rem;
             }
+
 
             .badge {
-                padding: 7px 12px;
-                font-size: 0.75rem;
+
+                padding: 7px 10px;
+
+                font-size: 0.72rem;
             }
 
+
             .timetable-grid {
-                grid-template-columns: 55px repeat(5, minmax(0, 1fr));
+
+                grid-template-columns:
+                    55px repeat(5, minmax(0, 1fr));
+
                 column-gap: 9px;
+
                 row-gap: 9px;
             }
 
+
             .time-header {
+
                 font-size: 0.72rem;
-                padding-bottom: 0;
             }
 
+
             .day-header {
+
                 height: 100px;
+
                 font-size: 0.88rem;
             }
 
+
             .slot-card {
+
                 height: 100px;
+
                 padding: 8px;
+
                 border-radius: 10px;
             }
+
 
             .slot-card .subject {
                 font-size: 0.86rem;
             }
 
+
             .slot-card .meta {
                 font-size: 0.68rem;
             }
+
 
             .slot-card .dash {
                 font-size: 1.1rem;
             }
 
+
             .entry-container {
+
                 gap: 25px;
+
                 padding: 25px;
             }
 
+
             .entry-list-view {
+
                 padding-left: 25px;
             }
         }
+
 
         /* =========================
            TABLET PORTRAIT
            ========================= */
 
-        @media (min-width: 600px) and (max-width: 850px) {
+        @media
+        (min-width: 600px)
+        and
+        (max-width: 850px) {
 
             body {
-                padding: 12px 12px;
+                padding: 12px;
             }
 
+
             .header-container {
+
                 width: 100%;
+
                 margin-bottom: 14px;
+
                 flex-wrap: wrap;
+
                 gap: 10px;
             }
+
 
             .logo {
                 font-size: 1.5rem;
             }
 
+
             .header-right {
+
                 width: 100%;
+
                 justify-content: flex-end;
-                flex-wrap: wrap;
+
                 gap: 6px;
             }
 
+
             .io-btn,
             .view-toggle-btn {
-                padding: 7px 9px;
-                font-size: 0.72rem;
+
+                padding: 7px 8px;
+
+                font-size: 0.68rem;
             }
 
+
             .timetable-grid {
-                grid-template-columns: 48px repeat(5, minmax(0, 1fr));
+
+                grid-template-columns:
+                    48px repeat(5, minmax(0, 1fr));
+
                 column-gap: 6px;
+
                 row-gap: 8px;
-                width: 100%;
             }
+
 
             .time-header {
                 font-size: 0.62rem;
-                padding-bottom: 0;
-                letter-spacing: -0.2px;
             }
 
+
             .day-header {
+
                 height: 90px;
+
                 font-size: 0.78rem;
             }
 
+
             .slot-card {
+
                 height: 90px;
+
                 padding: 6px;
+
                 border-radius: 9px;
             }
 
+
             .slot-card .subject {
                 font-size: 0.76rem;
-                margin-bottom: 3px;
             }
+
 
             .slot-card .meta {
                 font-size: 0.62rem;
-                margin-top: 1px;
             }
+
 
             .slot-card .dash {
                 font-size: 1rem;
             }
 
-            .slot-card .link-hint {
-                bottom: 4px;
-                right: 5px;
-                font-size: 0.6rem;
-            }
 
             .badge {
                 display: none;
             }
 
+
             .entry-container {
+
                 grid-template-columns: 1fr;
+
                 gap: 25px;
+
                 padding: 22px;
             }
 
+
             .entry-list-view {
+
                 border-left: none;
-                border-top: 1px solid #232838;
+
+                border-top:
+                    1px solid #232838;
+
                 padding-left: 0;
+
                 padding-top: 25px;
+
                 max-height: none;
             }
         }
+
 
         /* =========================
            VERY SMALL TABLETS
            ========================= */
 
-        @media (min-width: 600px) and (max-width: 700px) {
+        @media
+        (min-width: 600px)
+        and
+        (max-width: 700px) {
 
             .logo {
                 font-size: 1.35rem;
             }
 
+
             .header-right {
                 justify-content: flex-start;
             }
 
+
             .timetable-grid {
-                grid-template-columns: 42px repeat(5, minmax(0, 1fr));
+
+                grid-template-columns:
+                    42px repeat(5, minmax(0, 1fr));
+
                 column-gap: 5px;
+
                 row-gap: 7px;
             }
+
 
             .time-header {
                 font-size: 0.55rem;
             }
 
+
             .day-header {
+
                 height: 82px;
+
                 font-size: 0.72rem;
             }
 
+
             .slot-card {
+
                 height: 82px;
+
                 padding: 4px;
+
                 border-radius: 8px;
             }
+
 
             .slot-card .subject {
                 font-size: 0.68rem;
             }
+
 
             .slot-card .meta {
                 font-size: 0.56rem;
             }
         }
 
+
         /* =========================
            MOBILE
            ========================= */
 
-        @media (max-width: 599px) {
+        @media
+        (max-width: 599px) {
 
             body {
                 padding: 12px 8px;
             }
 
+
             .header-container {
+
                 flex-direction: column;
+
                 align-items: stretch;
+
                 gap: 10px;
+
                 margin-bottom: 12px;
             }
 
+
             .logo {
+
                 text-align: center;
+
                 font-size: 1.5rem;
             }
 
+
             .header-right {
+
                 width: 100%;
+
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
                 gap: 6px;
             }
 
+
             .io-btn,
             .view-toggle-btn {
+
                 width: 100%;
+
                 justify-content: center;
+
                 padding: 8px 5px;
-                font-size: 0.7rem;
+
+                font-size: 0.68rem;
             }
+
 
             .badge {
                 display: none;
             }
 
+
             .timetable-grid {
-                grid-template-columns: 36px repeat(5, minmax(0, 1fr));
+
+                grid-template-columns:
+                    36px repeat(5, minmax(0, 1fr));
+
                 column-gap: 4px;
+
                 row-gap: 6px;
             }
 
+
             .time-header {
+
                 font-size: 0.46rem;
-                padding-bottom: 0;
+
                 white-space: normal;
+
                 line-height: 1.1;
             }
 
+
             .day-header {
+
                 height: 72px;
+
                 font-size: 0.65rem;
             }
 
+
             .slot-card {
+
                 height: 72px;
+
                 padding: 3px;
+
                 border-radius: 7px;
             }
 
+
             .slot-card .subject {
+
                 font-size: 0.58rem;
+
                 margin-bottom: 2px;
             }
+
 
             .slot-card .meta {
                 font-size: 0.48rem;
             }
 
+
             .slot-card .dash {
                 font-size: 0.85rem;
             }
+
 
             .slot-card .link-hint {
                 display: none;
             }
 
+
             .entry-container {
+
                 grid-template-columns: 1fr;
+
                 gap: 20px;
+
                 padding: 16px;
             }
 
+
             .entry-list-view {
+
                 border-left: none;
-                border-top: 1px solid #232838;
+
+                border-top:
+                    1px solid #232838;
+
                 padding-left: 0;
+
                 padding-top: 20px;
+
                 max-height: none;
             }
+
 
             .form-actions {
                 flex-wrap: wrap;
             }
 
+
             .btn {
                 padding: 10px 16px;
             }
+
 
             .modal-content {
                 padding: 22px;
@@ -816,9 +1288,12 @@
         }
 
     </style>
+
 </head>
 
+
 <body>
+
 
     <!-- =========================
          HEADER
@@ -826,25 +1301,36 @@
 
     <div class="header-container">
 
+
         <div class="logo">
             Time<span>Table</span>
         </div>
 
+
         <div class="header-right">
+
+
+            <!--
+                This button manually loads the current
+                timetable.js master into localStorage.
+            -->
+
+            <button
+                class="io-btn master-btn"
+                onclick="refreshMasterSchedule()"
+                title="Replace your local timetable with the current timetable.js"
+            >
+                🔄 Refresh Master
+            </button>
+
 
             <button
                 class="io-btn"
-                onclick="exportJSON()"
+                onclick="exportData()"
             >
                 📥 Export JSON
             </button>
 
-            <button
-                class="io-btn"
-                onclick="exportMasterJS()"
-            >
-                📦 Export Master JS
-            </button>
 
             <button
                 class="io-btn"
@@ -853,13 +1339,15 @@
                 📤 Import JSON
             </button>
 
+
             <input
                 type="file"
                 id="importFile"
-                style="display:none;"
+                style="display:none"
                 accept=".json"
                 onchange="importData(event)"
             >
+
 
             <button
                 id="toggleGridBtn"
@@ -869,6 +1357,7 @@
                 Grid View
             </button>
 
+
             <button
                 id="toggleEntryBtn"
                 class="view-toggle-btn"
@@ -877,11 +1366,13 @@
                 Form Entry View
             </button>
 
+
             <div class="badge">
                 Interactive Mode
             </div>
 
         </div>
+
     </div>
 
 
@@ -894,12 +1385,39 @@
         class="view-section"
     >
 
+
         <div
             class="timetable-grid"
             id="mainTimetableGrid"
         >
-            <!-- Grid rendered dynamically -->
         </div>
+
+
+        <!--
+            MASTER EXPORT IS INTENTIONALLY
+            INSIDE GRID VIEW.
+
+            This creates a timetable.js file from
+            the timetable currently displayed.
+        -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:flex-end;
+                margin-top:18px;
+            "
+        >
+
+            <button
+                class="io-btn master-btn"
+                onclick="exportMasterJS()"
+            >
+                📦 Export Master JS
+            </button>
+
+        </div>
+
 
     </div>
 
@@ -913,13 +1431,17 @@
         class="view-section"
     >
 
+
         <div class="entry-container">
 
+
             <div class="entry-form">
+
 
                 <h3>
                     Add / Manage Entry
                 </h3>
+
 
                 <div class="form-group">
 
@@ -1011,7 +1533,7 @@
                     <input
                         type="text"
                         id="formRoom"
-                        placeholder="e.g., online, Room 153"
+                        placeholder="e.g., Online, Room 153"
                     >
 
                 </div>
@@ -1041,7 +1563,7 @@
                     <input
                         type="url"
                         id="formLink"
-                        placeholder="https://zoom.us/j/... or Blackboard URL"
+                        placeholder="https://zoom.us/..."
                     >
 
                 </div>
@@ -1096,8 +1618,6 @@
                 </div>
 
 
-                <!-- SAVE -->
-
                 <button
                     class="btn btn-primary"
                     onclick="handleFormSubmit()"
@@ -1106,27 +1626,21 @@
                 </button>
 
 
-                <!-- WIPE ALL -->
+                <!-- Wipe All -->
 
                 <button
-                    class="btn btn-danger"
-                    onclick="wipeAllData()"
-                    style="
-                        width:100%;
-                        margin-top:10px;
-                    "
+                    class="btn wipe-all-btn"
+                    onclick="wipeAll()"
                 >
-                    Wipe All
+                    🗑 Wipe All
                 </button>
+
 
             </div>
 
 
-            <!-- =========================
-                 CURRENT CLASSES
-                 ========================= -->
-
             <div class="entry-list-view">
+
 
                 <h3
                     style="
@@ -1138,7 +1652,9 @@
                     Current Active Classes
                 </h3>
 
+
                 <div id="liveStatusList"></div>
+
 
             </div>
 
@@ -1156,7 +1672,9 @@
         class="modal"
     >
 
+
         <div class="modal-content">
+
 
             <h3
                 style="
@@ -1275,6 +1793,7 @@
 
             <div class="form-actions">
 
+
                 <button
                     class="btn btn-danger"
                     onclick="deleteModalData()"
@@ -1283,12 +1802,14 @@
                     Clear
                 </button>
 
+
                 <button
                     class="btn btn-secondary"
                     onclick="closeModal()"
                 >
                     Cancel
                 </button>
+
 
                 <button
                     class="btn btn-primary"
@@ -1298,6 +1819,7 @@
                     Save
                 </button>
 
+
             </div>
 
         </div>
@@ -1305,19 +1827,12 @@
     </div>
 
 
-    <!--
-        IMPORTANT:
-        timetable.js MUST be in the same folder as this HTML.
-    -->
-
-    <script src="timetable.js"></script>
-
+    <!-- =========================
+         APPLICATION JAVASCRIPT
+         ========================= -->
 
     <script>
 
-        /* =====================================================
-           CONFIGURATION
-           ===================================================== */
 
         const days = [
             'Sun',
@@ -1327,147 +1842,162 @@
             'Thu'
         ];
 
+
         const times = [
+
             '10:00 - 12:00',
+
             '12:00 - 14:00',
+
             '14:00 - 16:00',
+
             '16:00 - 18:00',
+
             '18:00 - 20:00'
+
         ];
 
-        const LOCAL_STORAGE_KEY =
+
+        const STORAGE_KEY =
             'perfect_timetable_db';
 
 
-        /* =====================================================
-           LOAD USER TIMETABLE
-           ===================================================== */
+        /*
+         * IMPORTANT:
+         *
+         * If localStorage already contains a timetable,
+         * use the user's timetable.
+         *
+         * If there is no localStorage yet,
+         * start from MASTER_TIMETABLE.
+         */
 
         let timetableData;
 
-        const savedTimetable =
-            localStorage.getItem(
-                LOCAL_STORAGE_KEY
-            );
+
+        const savedData =
+            localStorage.getItem(STORAGE_KEY);
 
 
-        if (savedTimetable !== null) {
-
-            /*
-             * Existing user:
-             * always use their local timetable.
-             */
+        if (savedData) {
 
             try {
 
-                const parsed =
-                    JSON.parse(
-                        savedTimetable
-                    );
-
-                if (
-                    parsed &&
-                    typeof parsed === 'object' &&
-                    !Array.isArray(parsed)
-                ) {
-
-                    timetableData = parsed;
-
-                } else {
-
-                    timetableData = {};
-
-                }
+                timetableData =
+                    JSON.parse(savedData);
 
             } catch (error) {
 
-                timetableData = {};
-            }
+                timetableData =
+                    cloneMasterTimetable();
 
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(timetableData)
+                );
+            }
 
         } else {
 
-            /*
-             * First-time user:
-             * copy the master timetable from timetable.js.
-             */
-
-            if (
-                typeof DEFAULT_TIMETABLE !== 'undefined' &&
-                DEFAULT_TIMETABLE &&
-                typeof DEFAULT_TIMETABLE === 'object'
-            ) {
-
-                /*
-                 * Use JSON cloning for broad browser compatibility.
-                 */
-
-                timetableData =
-                    JSON.parse(
-                        JSON.stringify(
-                            DEFAULT_TIMETABLE
-                        )
-                    );
-
-            } else {
-
-                timetableData = {};
-
-            }
-
-
-            /*
-             * Save the master as this user's local timetable.
-             */
+            timetableData =
+                cloneMasterTimetable();
 
             localStorage.setItem(
-                LOCAL_STORAGE_KEY,
-                JSON.stringify(
-                    timetableData
-                )
+                STORAGE_KEY,
+                JSON.stringify(timetableData)
             );
         }
 
 
         let activeEditKey = null;
+
         let activeDraggedKey = null;
 
 
-        /* =====================================================
-           INITIALIZE
-           ===================================================== */
+        /* =========================
+           MASTER CLONE
+           ========================= */
 
-        function init() {
+        function cloneMasterTimetable() {
 
-            renderGridStructure();
+            if (
+                typeof MASTER_TIMETABLE === 'undefined'
+            ) {
 
-            renderFormLists();
-        }
+                console.error(
+                    'MASTER_TIMETABLE was not found.'
+                );
+
+                return {};
+            }
 
 
-        /* =====================================================
-           SAVE LOCAL DATA
-           ===================================================== */
-
-        function persist() {
-
-            localStorage.setItem(
-                LOCAL_STORAGE_KEY,
+            return JSON.parse(
                 JSON.stringify(
-                    timetableData
+                    MASTER_TIMETABLE
                 )
             );
         }
 
 
-        /* =====================================================
-           EXPORT PERSONAL JSON
-           ===================================================== */
+        /* =========================
+           PERSIST
+           ========================= */
 
-        function exportJSON() {
+        function persist() {
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(timetableData)
+            );
+        }
+
+
+        /* =========================
+           REFRESH MASTER
+           ========================= */
+
+        function refreshMasterSchedule() {
+
+            const confirmed =
+                confirm(
+                    'Refresh from the master timetable?\n\n' +
+                    'This will replace your current local timetable ' +
+                    'with the timetable stored in timetable.js.'
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            timetableData =
+                cloneMasterTimetable();
+
+
+            persist();
+
+
+            renderGridStructure();
+
+            renderFormLists();
+
+
+            alert(
+                'Master timetable loaded successfully.'
+            );
+        }
+
+
+        /* =========================
+           EXPORT JSON
+           ========================= */
+
+        function exportData() {
 
             const dataStr =
-                "data:text/json;charset=utf-8," +
+                'data:text/json;charset=utf-8,' +
                 encodeURIComponent(
                     JSON.stringify(
                         timetableData,
@@ -1482,14 +2012,14 @@
 
 
             downloadAnchor.setAttribute(
-                "href",
+                'href',
                 dataStr
             );
 
 
             downloadAnchor.setAttribute(
-                "download",
-                "timetable_backup.json"
+                'download',
+                'timetable_backup.json'
             );
 
 
@@ -1505,13 +2035,13 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            EXPORT MASTER JS
-           ===================================================== */
+           ========================= */
 
         function exportMasterJS() {
 
-            const timetableJSON =
+            const json =
                 JSON.stringify(
                     timetableData,
                     null,
@@ -1519,23 +2049,15 @@
                 );
 
 
-            const jsContent =
-`/*
- * =========================================================
- * MASTER TIMETABLE
- *
- * Generated by TimeTable.
- *
- * Replace your existing timetable.js on GitHub
- * with this file to publish a new default schedule.
- *
- * IMPORTANT:
- * Existing users keep their own local timetable.
- * New users will receive this timetable.
- * =========================================================
- */
+            /*
+             * This creates a real JavaScript file.
+             *
+             * You can upload the resulting file to GitHub
+             * and replace the old timetable.js.
+             */
 
-const DEFAULT_TIMETABLE = ${timetableJSON};
+            const jsContent =
+`const MASTER_TIMETABLE = ${json};
 `;
 
 
@@ -1550,9 +2072,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
             const url =
-                URL.createObjectURL(
-                    blob
-                );
+                URL.createObjectURL(blob);
 
 
             const downloadAnchor =
@@ -1560,6 +2080,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
             downloadAnchor.href = url;
+
 
             downloadAnchor.download =
                 'timetable.js';
@@ -1576,15 +2097,20 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             downloadAnchor.remove();
 
 
-            URL.revokeObjectURL(
-                url
+            URL.revokeObjectURL(url);
+
+
+            alert(
+                'Master timetable.js exported successfully.\n\n' +
+                'You can now replace the timetable.js file ' +
+                'in your GitHub repository with this file.'
             );
         }
 
 
-        /* =====================================================
+        /* =========================
            IMPORT JSON
-           ===================================================== */
+           ========================= */
 
         function importData(event) {
 
@@ -1614,7 +2140,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
                         if (
                             parsedData &&
-                            typeof parsedData === 'object' &&
+                            typeof parsedData ===
+                                'object' &&
                             !Array.isArray(parsedData)
                         ) {
 
@@ -1634,7 +2161,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                                 'Timetable successfully imported!'
                             );
 
-
                         } else {
 
                             alert(
@@ -1643,37 +2169,39 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                         }
 
 
-                    } catch (err) {
+                    } catch (error) {
 
                         alert(
-                            'Error loading file. Please upload a valid JSON file.'
+                            'Error loading file. ' +
+                            'Please upload a valid JSON file.'
                         );
                     }
+
                 };
 
 
-            fileReader.readAsText(
-                file
-            );
+            fileReader.readAsText(file);
 
 
             /*
-             * Allows the same file to be imported again.
+             * Allows the same file to be selected
+             * again later.
              */
 
             event.target.value = '';
         }
 
 
-        /* =====================================================
+        /* =========================
            WIPE ALL
-           ===================================================== */
+           ========================= */
 
-        function wipeAllData() {
+        function wipeAll() {
 
             const confirmed =
                 confirm(
-                    'Are you sure you want to wipe the entire timetable? This cannot be undone.'
+                    'Wipe the entire timetable?\n\n' +
+                    'This will remove every class from your local timetable.'
                 );
 
 
@@ -1682,12 +2210,17 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             }
 
 
-            /*
-             * Completely empty the user's timetable.
-             *
-             * We intentionally do NOT reload
-             * DEFAULT_TIMETABLE.
-             */
+            const doubleConfirmed =
+                confirm(
+                    'Are you sure?\n\n' +
+                    'All local timetable entries will be deleted.'
+                );
+
+
+            if (!doubleConfirmed) {
+                return;
+            }
+
 
             timetableData = {};
 
@@ -1700,18 +2233,15 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             renderFormLists();
 
 
-            clearFormFields();
-
-
             alert(
-                'The entire timetable has been wiped.'
+                'All timetable entries have been wiped.'
             );
         }
 
 
-        /* =====================================================
+        /* =========================
            VIEW SWITCH
-           ===================================================== */
+           ========================= */
 
         function switchView(viewName) {
 
@@ -1719,28 +2249,22 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
                 document.getElementById(
                     'gridView'
-                ).style.display =
-                    'block';
+                ).style.display = 'block';
 
 
                 document.getElementById(
                     'entryView'
-                ).style.display =
-                    'none';
+                ).style.display = 'none';
 
 
                 document.getElementById(
                     'toggleGridBtn'
-                ).classList.add(
-                    'active'
-                );
+                ).classList.add('active');
 
 
                 document.getElementById(
                     'toggleEntryBtn'
-                ).classList.remove(
-                    'active'
-                );
+                ).classList.remove('active');
 
 
                 renderGridStructure();
@@ -1750,28 +2274,22 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
                 document.getElementById(
                     'gridView'
-                ).style.display =
-                    'none';
+                ).style.display = 'none';
 
 
                 document.getElementById(
                     'entryView'
-                ).style.display =
-                    'block';
+                ).style.display = 'block';
 
 
                 document.getElementById(
                     'toggleGridBtn'
-                ).classList.remove(
-                    'active'
-                );
+                ).classList.remove('active');
 
 
                 document.getElementById(
                     'toggleEntryBtn'
-                ).classList.add(
-                    'active'
-                );
+                ).classList.add('active');
 
 
                 renderFormLists();
@@ -1779,9 +2297,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
+        /* =========================
            GRID RENDER
-           ===================================================== */
+           ========================= */
 
         function renderGridStructure() {
 
@@ -1799,18 +2317,14 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
              */
 
             const spacer =
-                document.createElement(
-                    'div'
-                );
+                document.createElement('div');
 
 
             spacer.className =
                 'time-header-spacer';
 
 
-            grid.appendChild(
-                spacer
-            );
+            grid.appendChild(spacer);
 
 
             /*
@@ -1818,7 +2332,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
              */
 
             times.forEach(
-                time => {
+                function(time) {
 
                     const header =
                         document.createElement(
@@ -1834,9 +2348,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                         time;
 
 
-                    grid.appendChild(
-                        header
-                    );
+                    grid.appendChild(header);
+
                 }
             );
 
@@ -1846,7 +2359,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
              */
 
             days.forEach(
-                day => {
+                function(day) {
 
                     const dayLabel =
                         document.createElement(
@@ -1897,10 +2410,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                         );
 
 
-                        /*
-                         * Filled slot
-                         */
-
                         if (
                             timetableData[
                                 slotKey
@@ -1928,8 +2437,15 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                                 data.link.trim() !== '';
 
 
+                            const linkIcon =
+                                hasLink
+                                    ? ' 🔗'
+                                    : '';
+
+
                             /*
-                             * Subject
+                             * textContent is used rather than
+                             * blindly inserting user data as HTML.
                              */
 
                             const subject =
@@ -1943,13 +2459,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             subject.textContent =
-                                data.subject ||
-                                '';
+                                data.subject || '';
 
-
-                            /*
-                             * Room
-                             */
 
                             const room =
                                 document.createElement(
@@ -1962,20 +2473,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             room.textContent =
-                                (
-                                    data.room ||
-                                    ''
-                                ) +
-                                (
-                                    hasLink
-                                        ? ' 🔗'
-                                        : ''
-                                );
+                                (data.room || '') +
+                                linkIcon;
 
-
-                            /*
-                             * Instructor
-                             */
 
                             const instructor =
                                 document.createElement(
@@ -2008,19 +2508,43 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             /*
-                             * Clicking a class:
+                             * Link hint
+                             */
+
+                            if (hasLink) {
+
+                                const hint =
+                                    document.createElement(
+                                        'div'
+                                    );
+
+
+                                hint.className =
+                                    'link-hint';
+
+
+                                hint.textContent =
+                                    '↗';
+
+
+                                card.appendChild(
+                                    hint
+                                );
+                            }
+
+
+                            /*
+                             * Clicking a linked class
+                             * opens the link.
                              *
-                             * Link exists → open link.
-                             * No link → edit class.
+                             * Right-click opens editing.
                              */
 
                             card.addEventListener(
                                 'click',
-                                () => {
+                                function() {
 
-                                    if (
-                                        hasLink
-                                    ) {
+                                    if (hasLink) {
 
                                         window.open(
                                             data.link.trim(),
@@ -2037,13 +2561,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                             );
 
 
-                            /*
-                             * Right click → edit.
-                             */
-
                             card.addEventListener(
                                 'contextmenu',
-                                (e) => {
+                                function(e) {
 
                                     e.preventDefault();
 
@@ -2056,20 +2576,18 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
                         } else {
 
-                            /*
-                             * Empty slot
-                             */
-
                             card.innerHTML =
                                 '<div class="dash">-</div>';
 
 
                             card.addEventListener(
                                 'click',
-                                () =>
+                                function() {
+
                                     triggerQuickEdit(
                                         slotKey
-                                    )
+                                    );
+                                }
                             );
                         }
 
@@ -2112,14 +2630,15 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                             card
                         );
                     }
+
                 }
             );
         }
 
 
-        /* =====================================================
+        /* =========================
            FORM LIST
-           ===================================================== */
+           ========================= */
 
         function renderFormLists() {
 
@@ -2129,15 +2648,14 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                 );
 
 
-            listContainer.innerHTML =
-                '';
+            listContainer.innerHTML = '';
 
 
             let count = 0;
 
 
             days.forEach(
-                day => {
+                function(day) {
 
                     for (
                         let i = 0;
@@ -2150,18 +2668,14 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                         if (
-                            timetableData[
-                                key
-                            ]
+                            timetableData[key]
                         ) {
 
                             count++;
 
 
                             const data =
-                                timetableData[
-                                    key
-                                ];
+                                timetableData[key];
 
 
                             const item =
@@ -2172,14 +2686,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
                             item.className =
                                 `list-item-row ${
-                                    data.color ||
-                                    'blue'
+                                    data.color || 'blue'
                                 }`;
 
-
-                            /*
-                             * Information container
-                             */
 
                             const info =
                                 document.createElement(
@@ -2191,23 +2700,15 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                                 'list-item-info';
 
 
-                            /*
-                             * Day/time
-                             */
-
-                            const schedule =
+                            const time =
                                 document.createElement(
                                     'span'
                                 );
 
 
-                            schedule.textContent =
+                            time.textContent =
                                 `[${day} ${times[i]}]`;
 
-
-                            /*
-                             * Subject
-                             */
 
                             const subject =
                                 document.createElement(
@@ -2216,13 +2717,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             subject.textContent =
-                                data.subject ||
-                                '';
+                                data.subject || '';
 
-
-                            /*
-                             * Room/instructor
-                             */
 
                             const details =
                                 document.createElement(
@@ -2239,20 +2735,16 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             details.textContent =
-                                (
-                                    data.room ||
-                                    ''
-                                ) +
-                                (
+                                `${data.room || ''}${
                                     data.instructor
                                         ? ' • ' +
                                           data.instructor
                                         : ''
-                                );
+                                }`;
 
 
                             info.appendChild(
-                                schedule
+                                time
                             );
 
 
@@ -2266,22 +2758,15 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                             );
 
 
-                            /*
-                             * Link
-                             */
+                            if (data.link) {
 
-                            if (
-                                data.link &&
-                                data.link.trim() !== ''
-                            ) {
-
-                                const linkDisplay =
+                                const link =
                                     document.createElement(
                                         'div'
                                     );
 
 
-                                linkDisplay.style.cssText =
+                                link.style.cssText =
                                     `
                                     font-size:0.75rem;
                                     color:#0091ff;
@@ -2289,23 +2774,19 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                                     text-overflow:ellipsis;
                                     white-space:nowrap;
                                     max-width:300px;
+                                    margin-top:4px;
                                     `;
 
 
-                                linkDisplay.textContent =
-                                    '🔗 ' +
-                                    data.link;
+                                link.textContent =
+                                    `🔗 ${data.link}`;
 
 
                                 info.appendChild(
-                                    linkDisplay
+                                    link
                                 );
                             }
 
-
-                            /*
-                             * Edit button
-                             */
 
                             const editButton =
                                 document.createElement(
@@ -2322,10 +2803,12 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
 
 
                             editButton.onclick =
-                                () =>
+                                function() {
+
                                     triggerQuickEdit(
                                         key
                                     );
+                                };
 
 
                             item.appendChild(
@@ -2347,29 +2830,29 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             );
 
 
-            /*
-             * Empty timetable
-             */
-
             if (count === 0) {
 
                 listContainer.innerHTML = `
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:0.9rem;
-                    ">
+
+                    <div
+                        style="
+                            color:var(--text-muted);
+                            font-size:0.9rem;
+                        "
+                    >
                         No entries saved yet.
                         Fill out the form fields on the left
                         to add your items.
                     </div>
+
                 `;
             }
         }
 
 
-        /* =====================================================
+        /* =========================
            FORM SUBMIT
-           ===================================================== */
+           ========================= */
 
         function handleFormSubmit() {
 
@@ -2452,16 +2935,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             renderFormLists();
 
 
-            clearFormFields();
-        }
-
-
-        /* =====================================================
-           CLEAR FORM
-           ===================================================== */
-
-        function clearFormFields() {
-
             document.getElementById(
                 'formSubject'
             ).value = '';
@@ -2483,9 +2956,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
+        /* =========================
            QUICK EDIT
-           ===================================================== */
+           ========================= */
 
         function triggerQuickEdit(key) {
 
@@ -2501,36 +2974,31 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             document.getElementById(
                 'modalSubject'
             ).value =
-                data.subject ||
-                '';
+                data.subject || '';
 
 
             document.getElementById(
                 'modalRoom'
             ).value =
-                data.room ||
-                '';
+                data.room || '';
 
 
             document.getElementById(
                 'modalInstructor'
             ).value =
-                data.instructor ||
-                '';
+                data.instructor || '';
 
 
             document.getElementById(
                 'modalLink'
             ).value =
-                data.link ||
-                '';
+                data.link || '';
 
 
             document.getElementById(
                 'modalColor'
             ).value =
-                data.color ||
-                'blue';
+                data.color || 'blue';
 
 
             document.getElementById(
@@ -2540,33 +3008,16 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           CLOSE MODAL
-           ===================================================== */
-
         function closeModal() {
 
             document.getElementById(
                 'quickModal'
             ).style.display =
                 'none';
-
-
-            activeEditKey =
-                null;
         }
 
 
-        /* =====================================================
-           SAVE MODAL
-           ===================================================== */
-
         function saveModalData() {
-
-            if (!activeEditKey) {
-                return;
-            }
-
 
             const subject =
                 document.getElementById(
@@ -2606,9 +3057,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             }
 
 
-            timetableData[
-                activeEditKey
-            ] = {
+            timetableData[activeEditKey] = {
 
                 subject,
 
@@ -2635,10 +3084,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           DELETE MODAL DATA
-           ===================================================== */
-
         function deleteModalData() {
 
             if (!activeEditKey) {
@@ -2663,9 +3108,9 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           DRAG START
-           ===================================================== */
+        /* =========================
+           DRAG & DROP
+           ========================= */
 
         function handleDragStart(e) {
 
@@ -2678,22 +3123,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             this.classList.add(
                 'dragging'
             );
-
-
-            e.dataTransfer.effectAllowed =
-                'move';
-
-
-            e.dataTransfer.setData(
-                'text/plain',
-                activeDraggedKey
-            );
         }
 
-
-        /* =====================================================
-           DRAG OVER
-           ===================================================== */
 
         function handleDragOver(e) {
 
@@ -2706,10 +3137,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           DRAG LEAVE
-           ===================================================== */
-
         function handleDragLeave() {
 
             this.classList.remove(
@@ -2717,10 +3144,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             );
         }
 
-
-        /* =====================================================
-           DROP
-           ===================================================== */
 
         function handleDrop(e) {
 
@@ -2744,14 +3167,8 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             ) {
 
                 const tempStorage =
-                    timetableData[
-                        targetKey
-                    ];
+                    timetableData[targetKey];
 
-
-                /*
-                 * Move dragged item
-                 */
 
                 if (
                     timetableData[
@@ -2759,9 +3176,7 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                     ]
                 ) {
 
-                    timetableData[
-                        targetKey
-                    ] =
+                    timetableData[targetKey] =
                         timetableData[
                             activeDraggedKey
                         ];
@@ -2773,11 +3188,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
                     ];
                 }
 
-
-                /*
-                 * Put target item into
-                 * original dragged position.
-                 */
 
                 if (tempStorage) {
 
@@ -2804,10 +3214,6 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           DRAG END
-           ===================================================== */
-
         function handleDragEnd() {
 
             this.classList.remove(
@@ -2820,21 +3226,18 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
         }
 
 
-        /* =====================================================
-           CLOSE MODAL WHEN CLICKING OUTSIDE
-           ===================================================== */
+        /* =========================
+           CLOSE MODAL
+           ========================= */
 
         window.onclick =
             function(e) {
 
-                const modal =
+                if (
+                    e.target ===
                     document.getElementById(
                         'quickModal'
-                    );
-
-
-                if (
-                    e.target === modal
+                    )
                 ) {
 
                     closeModal();
@@ -2842,13 +3245,22 @@ const DEFAULT_TIMETABLE = ${timetableJSON};
             };
 
 
-        /* =====================================================
-           START APPLICATION
-           ===================================================== */
+        /* =========================
+           START
+           ========================= */
+
+        function init() {
+
+            renderGridStructure();
+
+            renderFormLists();
+        }
+
 
         init();
 
     </script>
 
 </body>
+
 </html>
