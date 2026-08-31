@@ -10,7 +10,7 @@ const MASTER_TIMETABLE = {
         "subject": "Computing Essentials",
         "room": "TU170 - 6301",
         "instructor": "سهى الشيخ",
-        "link": "https://u18526086.ct.sendgrid.net/ls/click?upn=u001.sxvE2J0vyOdHkfI6l-2F7cUij1FxGW0jNyEB9MqW9xkLZDGA6YzAo17-2F7Nbxrr8F0r_Vwb_PqQJQerriPb8PeXjXT18YvKjF1Ut9uzJ1EaO9Hw1U5g588fVXBWg8EU40K-2F-2FuExyJspsaXurBUN-2FCnXWXs23lpWGhqRfeQs2B5BtADUIvfetFvYgfULDWVZQKbEIsvfWGwCyhmR5Dmei3gN9eoep-2BN0F3lQWe2bTWJFc42l9KUnmuNehqhr4547quwTWZP-2BM71ExllaRWSbEzJtsrw0TfA-3D-3D",
+        "link": "https://teams.microsoft.com/meet/315331362367243?p=qaJNkEsrmkhcJhfoPG",
         "color": "blue"
     },
     "Sun-4": {
